@@ -13,7 +13,7 @@ import Paper from '@material-ui/core/Paper';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
+import AddIcon from '@material-ui/icons/PersonAdd';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -31,7 +31,10 @@ import Input from '@material-ui/core/Input';
 import MenuItem from '@material-ui/core/MenuItem';
 import Snackbar from '@material-ui/core/Snackbar';
 import AutoIcon from '@material-ui/icons/Autorenew';
+import PhoneIcon from '@material-ui/icons/PhoneForwarded';
 import {UserCard} from 'react-ui-cards';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
+import CopyIcon from '@material-ui/icons/FileCopy'
 
 
 const styles = theme => ({
@@ -115,7 +118,7 @@ const styles = theme => ({
         },
     },
     menuButton:{
-        width:'80%',
+        width:'60%',
         marginLeft:'auto',
         marginRight: 'auto',
         zIndex:2,
@@ -139,7 +142,7 @@ const styles = theme => ({
     },
     settingButton:{
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'row',
         alignItems: 'center',
         marginRight:'2%',
         marginLeft:'auto',
@@ -153,7 +156,7 @@ const styles = theme => ({
         height:'auto',
     },
     viewTab:{
-        marginTop:theme.spacing.unit*3,
+       // marginTop:theme.spacing.unit*,
         backgroundColor:'#357a38',
         fontWeight:'bold',
     },
@@ -180,23 +183,31 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.paper,
         boxShadow: theme.shadows[5],
         padding: theme.spacing.unit * 4,
-      },
+    },
+    phone:{
+        position: 'absolute',
+        width: theme.spacing.unit * 40,
+        backgroundColor: theme.palette.background.paper,
+        boxShadow: theme.shadows[5],
+        padding: theme.spacing.unit * 4,
+        alignContent: 'center',
+    }
 });
 
-class Warehouse extends Component{
+class Supply extends Component{
     render(){
         console.log( )
         const { classes , menuToggle } = this.props;
         if (menuToggle){
             return(
                 <div className={classes.Offroot}>
-                    <WarehouseContent classes={classes} />
+                    <SupplyContent classes={classes} />
                 </div>
             )
         }else{
             return(
                 <div className={classes.Onroot}>
-                    <WarehouseContent classes={classes} />
+                    <SupplyContent classes={classes} />
                 </div>
             )
         }
@@ -209,15 +220,15 @@ const mapStateToProps = (state) => {
     };
 }
 
-const warehouseItems = [
-    {id:"1",code:"co001",name:"ပဲစိမ်း",unit:"တင်းရေ"},
-    {id:"2",code:"b002",name:"ရွေဘိုပေါ်ဆန်း",unit:"အိတ်"},
-    {id:"3",code:"co002",name:"ပြောင်းဘူး",unit:"အိတ်"},
-    {id:"4",code:"co390",name:"ပဲတူးတီ",unit:"ပြည်"},
-    {id:"1",code:"co199",name:"မပဲ",unit:"တင်းရေ"},
-    {id:"2",code:"co453",name:"စတော်ပဲ",unit:"တင်းရေ"},
-    {id:"3",code:"co212",name:"ပဲခြမ်း",unit:"ပိသာ"},
-    {id:"4",code:"co138",name:"ပဲပုတ်",unit:"ပိသာ"},
+const SupplyItems = [
+    {id:"1",code:"co001",name:"ဦးမြ",description:"",phone:"092053182",addr:"အမှတ် (၂) အိပ်အမှတ် ၇ , မင်းတုန်းလမ်း",township:"ရွှေဘို",division:"မန္တလေးမြို့"},
+    {id:"2",code:"b002",name:"ဦးဘ",description:"",phone:"09205212",addr:"",township:"ရွှေဘို",division:"မန္တလေးမြို့"},
+    {id:"3",code:"co002",name:"ဦးချစ်မောင်",description:"",phone:"09952141233",addr:"ပုဇွန်တောင်အထက်လမ်း တိုက် (၂) ၄ လွှာ",township:"ပုဇွန်တောင်",division:"ရန်ကုန်"},
+    {id:"4",code:"co390",name:"ဦးအောင်ကို",description:"",phone:"099543847372",addr:"",township:"",division:""},
+    {id:"1",code:"co199",name:"ဒေါ်ခင်အေး",description:"",phone:"09972226432",addr:"",township:"",division:""},
+    {id:"2",code:"co453",name:"ဦးလှမောင်",description:"",phone:"092053182",addr:"",township:"",division:""},
+    {id:"3",code:"co212",name:"ခင်နု",description:"",phone:"092053182",addr:"",township:"",division:""},
+    {id:"4",code:"co138",name:"မမြကြည်",description:"",phone:"09259116768",addr:"",township:"",division:""},
 ]
 const units=[
     {name:"တင်းရေ"},
@@ -225,12 +236,17 @@ const units=[
     {name:"ပြည်"},
     {name:"ပိသာ"},
 ]
+const divisions=[
+    {name:"မန္တလေးမြို့"},
+    {name:"ရန်ကုန်မြို့"},
+    {},
+]
 
-class WarehouseContent extends Component{
+class SupplyContent extends Component{
     constructor(props){
         super(props);
         this.state={
-            selectedItem:warehouseItems[0],  
+            selectedItem:SupplyItems[0],  
             selectedView:0, 
             dialogOpen:false,
             snackOpen:false,
@@ -257,7 +273,7 @@ class WarehouseContent extends Component{
             <AppBar position="sticky" color="default">
                 <Toolbar className={classes.toolBar}>
                 <Typography variant="h6" color="primary">
-                    Label
+                    တောင်သူ
                 </Typography>
                 <div className={classes.grow} />
                 <div className={classes.search}>
@@ -277,26 +293,35 @@ class WarehouseContent extends Component{
             <div className={classes.content}>
                 <Grid container spacing={24}>
                     <Grid item xs={12} sm={12} md={4}>
+                        <div>
+                            <Grid container>
+                                <Grid item  sm={12}>
+                                        
+                                </Grid>
+                            </Grid>  
+                        </div>    
+                        
                         <div className={classes.menuButton}>
                         <Button variant="extendedFab" aria-label="addNewItem" fullWidth className={classes.addButton}
                         onClick={this.handleDialog}
                         >             
                             <AddIcon />
-                            ကုန်ပစ္စည်းအသစ်ထည့်မည်
+                            တောင်သူ အသစ်ထည့်မည်
                         </Button>   
                         </div>
                         <Paper className={classes.paper} style={{marginTop:-20}}>
                             <GridList cellHeight={200} spacing={25} cols={1} className={classes.gridList}>
-                                {warehouseItems.map(item => (
-                                   <WarehouseItemUI item={item} classes={classes} handleItem={this.handleSelectedItem}/>
+                                {SupplyItems.map(item => (
+                                   <SupplyItemUI item={item} classes={classes} handleItem={this.handleSelectedItem}/>
                                 ))}
                             </GridList>    
                         </Paper>
                     </Grid>
                     <Grid item xs={12} sm={12} md={8}>
-                        <Paper className={classes.paper}>
-                                <WarehouseItemView data={this.state.selectedItem} classes={classes}/>
-                         </Paper>
+                        
+                        <SupplyItemView data={this.state.selectedItem} classes={classes}/>
+                         
+                      
                     </Grid>
                 </Grid>  
 
@@ -307,7 +332,7 @@ class WarehouseContent extends Component{
                     onClose={this.handleDialog}
                     >
                     <div style={getModalStyle()} className={classes.dialog}>
-                            <NewItemDialog  classes={classes} close={this.handleDialog} snackMsg={this.handleSnack}/> 
+                        <NewItemDialog  classes={classes} close={this.handleDialog} snackMsg={this.handleSnack}/> 
                     </div>
                 </Modal>   
                 <Snackbar
@@ -480,7 +505,19 @@ class NewItemDialog extends Component{
 }
 
 
-class WarehouseItemUI extends Component{
+class SupplyItemUI extends Component{
+    constructor(props){
+        super(props);
+        this.state={
+            dialogPhoneBook:false,
+            value: '',
+            copied: false,
+        }
+        this.handlePhoneBook=this.handlePhoneBook.bind(this)
+    } 
+    handlePhoneBook(){
+        this.setState({dialogPhoneBook:!this.state.dialogPhoneBook})
+    }
     render(){
         const { classes,item,handleItem } = this.props;
         return(
@@ -492,27 +529,56 @@ class WarehouseItemUI extends Component{
                             <Typography component="h5" variant="h5" color="primary" align="left">
                                 {item.name}
                             </Typography>
-                            <Typography component="caption" variant="caption" align="left">
-                                {item.code}
-                            </Typography>
-                                                  
                         </CardContent>
                         <div className={classes.settingButton}>
-                            <Typography component="caption" variant="caption" color="secondary" align="left">
-                                {item.unit}
-                            </Typography>
                             <IconButton variant="fab" aria-label="Delete">
                                 <DeleteIcon className={classes.settingIcon}/>
                             </IconButton>
+                            <IconButton variant="fab" aria-label="Phone" onClick={this.handlePhoneBook}>
+                                <PhoneIcon className={classes.settingIcon}/>
+                            </IconButton>
                         </div>    
-                        
                     </div>
                     </CardActionArea>
+                        <Modal
+                            aria-labelledby="phone-book"
+                            aria-describedby="framer phone book"
+                            open={this.state.dialogPhoneBook}
+                            onClose={this.handlePhoneBook}
+                            >
+                            <div style={getModalStyle()} className={classes.phone}>
+                                <AppBar position='fixed'>
+                                        <Toolbar>                       
+                                        <Typography variant="h6" color="inherit" className={classes.flex}>
+                                            {item.name} ကို ဆက်သွယ်ရန်
+                                        </Typography>
+                                        <IconButton color="inherit" onClick={this.handlePhoneBook} aria-label="Close">
+                                            <CloseIcon />
+                                        </IconButton>
+                                        </Toolbar>
+                                </AppBar>
+                                <div style={{paddingTop:50}}>                                   
+                                    <Typography component="h2" variant="headline" gutterBottom align="center">
+                                            {item.phone}                                           
+                                    </Typography>                    
+                                    <Typography variant="subheading" gutterBottom align="center">
+                                            {item.addr}
+                                    </Typography>
+                                    <Typography variant="subheading" gutterBottom align="center">
+                                            {item.township}
+                                    </Typography>
+                                    <Typography component="h6" variant="headline" gutterBottom align="center">
+                                            {item.division}
+                                    </Typography>
+                                </div>
+                            </div>
+                        </Modal>   
                 </Card>  
   
         )
     }
 }
+
 
 const HistoryData = [
     {month: 'Jan', uv: 4000, pv: 2400},
@@ -530,7 +596,7 @@ const HistoryData = [
 
 ];
 
-class WarehouseItemView extends Component{
+class SupplyItemView extends Component{
     constructor(props){
         super(props);
         this.state={
@@ -549,77 +615,6 @@ class WarehouseItemView extends Component{
         return (
             <div className={classes.view}>
                 <Grid container >
-                    <Grid item xs={12}>
-                        <Grid container className={classes.display}>
-                            <Grid item xs={6}>
-                                <Typography variant="caption" gutterBottom align="left">
-                                    ကုန်ပစ္စည်းအမည်
-                                </Typography> 
-                                <spam className={classes.spacing} /> 
-                                <Typography variant="title" align="left">
-                                    {data.name}
-                                </Typography>                             
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Typography variant="caption" gutterBottom align="left">
-                                    ကုန်ပစ္စည်းအတိုင်းအတာယူနစ်
-                                </Typography>
-                                <spam className={classes.spacing} />
-                                <Typography variant="title" align="left">
-                                    {data.unit}
-                                </Typography>
-                            </Grid>  
-                            <Grid item xs={6}>
-                                <Typography variant="caption" gutterBottom align="left">
-                                    လက်ရှိရောင်းစျေး
-                                </Typography>
-                                <spam className={classes.spacing} /> 
-                                <Typography variant="title" align="left">
-                                    ၁၄၀၀ ကျပ်
-                                </Typography>
-                            </Grid>    
-                            <Grid item xs={6}>
-                                <Typography variant="caption" gutterBottom align="left">
-                                    ၀ယ်စျေး
-                                </Typography>
-                                <spam className={classes.spacing} />
-                                <Typography variant="title" align="left">
-                                    ၁၃၀၀ ကျပ်
-                                </Typography>
-                            </Grid>  
-                            <Grid item xs={6}>
-                                <Typography variant="caption" gutterBottom align="left">
-                                    စုစုပေါင်းတန်ဖိုး
-                                </Typography>
-                                <spam className={classes.spacing} />
-                                <Typography variant="title" align="left">
-                                    ၁၃၄၀၀၀၀ ကျပ်
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Grid container>
-                                    <Grid item xs={4}>
-                                    </Grid>
-                                    <Grid item xs={4}>
-                      
-                                    </Grid>
-                                    <Grid item xs={4}>
-                                        <div className={classes.viewSettingButton}>                   
-                                        <IconButton variant="fab" className={classes.addButton}
-                                        
-                                        >
-                                            <SettingIcon />
-                                        </IconButton>
-                                        <spam className={classes.bpacing}/>
-                                        <IconButton variant="fab" className={classes.addButton}>
-                                            <PrintIcon />
-                                        </IconButton>
-                                        </div>
-                                    </Grid>    
-                                </Grid>
-                            </Grid>  
-                        </Grid>
-                    </Grid>
                     <Grid item xs={12}>                        
                         <AppBar position="static"
                         classes={{
@@ -627,39 +622,58 @@ class WarehouseItemView extends Component{
                         }}
                         >
                             <Tabs value={selectedView}>
-                                <Tab label="အရောင်းစာရင်း" onClick={e=>this.handleChange(0)}/>
-                                <Tab label="အ၀ယ်စာရင်း" onClick={e=>this.handleChange(1)}/>
-                                <Tab label="ရောင်းစျေး ၊ ၀ယ်စျေး" onClick={e=>this.handleChange(2)}/>
+                                <Tab label="ကိုယ်ရေးအကျဥ်းချုပ်" onClick={e=>this.handleChange(0)}/>
+                                <Tab label="သိုလှောင်ပစ္စည်းများ" onClick={e=>this.handleChange(1)}/>
+                                <Tab label="လုပ်ဆောင်ချက်များ" onClick={e=>this.handleChange(2)}/>
                             </Tabs>
                         </AppBar>    
                         {selectedView === 0 && 
                         <TabContainer>
-                            <LineChart width={600} height={200} data={HistoryData}
-                            margin={{top: 5, right: 30, left: 30, bottom: 5}}    
-                            >
-                            <XAxis dataKey="month"/>                            
-                            <Tooltip/>
-                            <Line type="monotone" dataKey="pv" stroke="#82ca9d" />
-                            </LineChart> 
+                            <Grid container spacing={24}>
+                                <Grid item xs={12} sm={4}>
+                                    <Typography variant="caption" gutterBottom align="left">
+                                            တောင်သူအမည်
+                                    </Typography> 
+                                    <spam className={classes.spacing} /> 
+                                    <Typography variant="title" align="left">
+                                        {data.name}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={4}>
+                                    <Typography variant="caption" gutterBottom align="left">
+                                            ဆက်သွယ်ရန်ဖုန်းနံပါတ်
+                                    </Typography> 
+                                    <spam className={classes.spacing} /> 
+                                    <Typography variant="title" align="left">
+                                        {data.phone}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={4}>
+                                    <Typography variant="caption" gutterBottom align="left">
+                                            တိုင်းဒေသကြီး
+                                    </Typography> 
+                                    <spam className={classes.spacing} /> 
+                                    <Typography variant="title" align="left">
+                                        {data.division}
+                                    </Typography>
+                                </Grid>
+                                
+                                <Grid item xs={12} sm={12}>
+                                    <Typography variant="caption" gutterBottom align="left">
+                                            ဆက်သွယ်ရန်လိပ်စာ
+                                    </Typography> 
+                                    <spam className={classes.spacing} /> 
+                                    <Typography variant="title" align="left">
+                                        {data.addr}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
                         </TabContainer>}
                         {selectedView === 1 && <TabContainer>
-                            <LineChart width={600} height={200} data={HistoryData}
-                            margin={{top: 5, right: 30, left: 30, bottom: 5}}    
-                            >
-                            <XAxis dataKey="month"/>                            
-                            <Tooltip/>
-                            <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-                            </LineChart> 
+                            သိုလှောင်ပစ္စည်းများ
                         </TabContainer>}
                         {selectedView === 2 && <TabContainer>
-                            <LineChart width={600} height={200} data={HistoryData}
-                            margin={{top: 5, right: 30, left: 30, bottom: 5}}    
-                            >
-                            <XAxis dataKey="month"/>                            
-                            <Tooltip/>
-                            <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-                            <Line type="monotone" dataKey="pv" stroke="#82ca9d" />
-                            </LineChart> 
+                            လုပ်ဆောင်ချက်များ
                         </TabContainer>}
                              
                       </Grid>
@@ -671,13 +685,13 @@ class WarehouseItemView extends Component{
 
 function TabContainer(props) {
     return (
-      <Typography component="div" style={{ padding: 8 * 3 }}>
-        {props.children}
-      </Typography>
+        <Paper style={{ padding: 8 * 3 ,boxShadow: '0px 0px 2px 1px rgba(76,175,80, .7)'}}>
+             {props.children}
+        </Paper>  
     );
   }
 
 
 
 
-export default connect(mapStateToProps, null)(withStyles(styles)(Warehouse))
+export default connect(mapStateToProps, null)(withStyles(styles)(Supply))

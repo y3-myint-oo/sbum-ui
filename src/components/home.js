@@ -2,11 +2,29 @@ import React, { Component } from 'react';
 import SideNav, { NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import Dashboard from './dashboard';
-import Warehouse from './warehouse';
+import { withStyles } from '@material-ui/core';
 import { bindActionCreators } from 'redux';
 import { changeMenuToggle } from '../actions';
 import { connect }  from 'react-redux';
+
+import Dashboard from './dashboard';
+import Warehouse from './warehouse';
+import Setting from './setting';
+import Supply from './supply';
+import DashboardIcon from '@material-ui/icons/ViewQuilt';
+import WarehouseIcon from '@material-ui/icons/StoreMallDirectory';
+import SettingIcon from '@material-ui/icons/Settings'
+import SupplyIcon from '@material-ui/icons/LocalShipping';
+
+const styles = theme => ({
+    nav:{
+        minHeight:'100vh',         
+        [theme.breakpoints.down('sm')]: {
+            //backgroundColor: 'red !important',
+            minHeight:'150vh',  
+        },
+    },
+});
 
 class Home extends Component{
   constructor(props){
@@ -21,11 +39,12 @@ class Home extends Component{
       this.props.changeMenuToggle(this.state.toggle)
   }
   render() {
-    return (
+    const { classes } = this.props;
+    return (        
         <Router>
         <Route render={({ location, history }) => (
         <React.Fragment>
-            <SideNav
+            <SideNav className={classes.nav}
                 onSelect={(selected) => {
                     const to = '/' + selected;
                     if (location.pathname !== to) {
@@ -36,15 +55,35 @@ class Home extends Component{
                 <SideNav.Toggle  onClick={this.handClick}/>
                 <SideNav.Nav defaultSelected="dashboard">
                     <NavItem eventKey="dashboard">
-                        <NavIcon></NavIcon>
+                        <NavIcon>
+                            <DashboardIcon />
+                        </NavIcon>
                         <NavText>
                             Dashboard
                         </NavText>
                     </NavItem>
                     <NavItem eventKey="warehouse">
-                        <NavIcon></NavIcon>
+                        <NavIcon>
+                            <WarehouseIcon />
+                        </NavIcon>
                         <NavText>
                             Warehouse
+                        </NavText>
+                    </NavItem>
+                    <NavItem eventKey="supply">
+                        <NavIcon>
+                            <SupplyIcon />
+                        </NavIcon>
+                        <NavText>
+                            Supplyer
+                        </NavText>
+                    </NavItem>
+                    <NavItem eventKey="setting">
+                        <NavIcon>
+                            <SettingIcon />
+                        </NavIcon>
+                        <NavText>
+                            Setting
                         </NavText>
                     </NavItem>
                 </SideNav.Nav>
@@ -52,6 +91,8 @@ class Home extends Component{
             <main>
                 <Route path="/dashboard" exact component={props => <Dashboard />} />
                 <Route path="/warehouse" component={props => <Warehouse />} />
+                <Route path="/setting" component={props => <Setting />} />
+                <Route path="/supply" component={props => <Supply />} />
             </main>
         </React.Fragment>
         )}
@@ -73,4 +114,4 @@ function mapDispatchToProps(toggle){
 }
 
 
-export default connect(mapStateToProps,mapDispatchToProps)(Home);
+export default connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)(Home));
