@@ -221,12 +221,12 @@ const mapStateToProps = (state) => {
 }
 
 const SupplyItems = [
-    {id:"1",code:"co001",name:"ဦးမြ",description:"",phone:"092053182",addr:"အမှတ် (၂) အိပ်အမှတ် ၇ , မင်းတုန်းလမ်း",township:"ရွှေဘို",division:"မန္တလေးမြို့"},
+    {id:"1",code:"co001",name:"ဦးမြ",description:"ရွှေဘို တောင်သူ",phone:"092053182",addr:"အမှတ် (၂) အိပ်အမှတ် ၇ , မင်းတုန်းလမ်း",township:"ရွှေဘို",division:"မန္တလေးမြို့"},
     {id:"2",code:"b002",name:"ဦးဘ",description:"",phone:"09205212",addr:"",township:"ရွှေဘို",division:"မန္တလေးမြို့"},
     {id:"3",code:"co002",name:"ဦးချစ်မောင်",description:"",phone:"09952141233",addr:"ပုဇွန်တောင်အထက်လမ်း တိုက် (၂) ၄ လွှာ",township:"ပုဇွန်တောင်",division:"ရန်ကုန်"},
     {id:"4",code:"co390",name:"ဦးအောင်ကို",description:"",phone:"099543847372",addr:"",township:"",division:""},
-    {id:"1",code:"co199",name:"ဒေါ်ခင်အေး",description:"",phone:"09972226432",addr:"",township:"",division:""},
-    {id:"2",code:"co453",name:"ဦးလှမောင်",description:"",phone:"092053182",addr:"",township:"",division:""},
+    {id:"1",code:"co199",name:"ဒေါ်ခင်အေး",description:"",phone:"09972226432",addr:"လမ်း ၅၀ အလယ်ဘလောက် တိုက် ၂၁",township:"ကျောက်တံတား",division:"ရန်ကုန်"},
+    {id:"2",code:"co453",name:"ဦးလှမောင်",description:"",phone:"092053182",addr:"ပုဇွန်တောင်အထက်လမ်း",township:"",division:""},
     {id:"3",code:"co212",name:"ခင်နု",description:"",phone:"092053182",addr:"",township:"",division:""},
     {id:"4",code:"co138",name:"မမြကြည်",description:"",phone:"09259116768",addr:"",township:"",division:""},
 ]
@@ -665,6 +665,15 @@ class SupplyItemView extends Component{
                                     <spam className={classes.spacing} /> 
                                     <Typography variant="title" align="left">
                                         {data.addr}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={12}>
+                                    <Typography variant="caption" gutterBottom align="left">
+                                            မှတ်ချက်
+                                    </Typography> 
+                                    <spam className={classes.spacing} /> 
+                                    <Typography variant="title" align="left">
+                                        {data.description}
                                     </Typography>
                                 </Grid>
                             </Grid>
