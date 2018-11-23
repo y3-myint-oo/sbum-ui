@@ -11,10 +11,14 @@ import Dashboard from './dashboard';
 import Warehouse from './warehouse';
 import Setting from './setting';
 import Supply from './supply';
+import Agent from './agent';
+import Users from './users';
 import DashboardIcon from '@material-ui/icons/ViewQuilt';
 import WarehouseIcon from '@material-ui/icons/StoreMallDirectory';
 import SettingIcon from '@material-ui/icons/Settings'
 import SupplyIcon from '@material-ui/icons/LocalShipping';
+import AgentIcon from '@material-ui/icons/ShoppingCart';
+import UsersIcon from '@material-ui/icons/Group';
 
 const styles = theme => ({
     nav:{
@@ -78,6 +82,22 @@ class Home extends Component{
                             Supplyer
                         </NavText>
                     </NavItem>
+                    <NavItem eventKey="agent">
+                        <NavIcon>
+                            <AgentIcon />
+                        </NavIcon>
+                        <NavText>
+                            Agent
+                        </NavText>
+                    </NavItem>
+                    <NavItem eventKey="users">
+                        <NavIcon>
+                            <UsersIcon />
+                        </NavIcon>
+                        <NavText>
+                            Users
+                        </NavText>
+                    </NavItem>
                     <NavItem eventKey="setting">
                         <NavIcon>
                             <SettingIcon />
@@ -93,6 +113,8 @@ class Home extends Component{
                 <Route path="/warehouse" component={props => <Warehouse />} />
                 <Route path="/setting" component={props => <Setting />} />
                 <Route path="/supply" component={props => <Supply />} />
+                <Route path="/agent" component={props => <Agent />} />
+                <Route path="/users" component={props => <Users />} />
             </main>
         </React.Fragment>
         )}

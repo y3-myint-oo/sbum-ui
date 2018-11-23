@@ -41,8 +41,18 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
+import classNames from 'classnames';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
+import Chip from '@material-ui/core/Chip';
+import Avatar from '@material-ui/core/Avatar';
+import Badge from '@material-ui/core/Badge';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Divider from '@material-ui/core/Divider';
 
 const styles = theme => ({
    
@@ -124,6 +134,13 @@ const styles = theme => ({
             width: '103%',
         },
     },
+    orderGridList:{
+        display:'block',
+        width: '100%',
+        height: theme.spacing.unit*62,     
+        paddingTop:theme.spacing.unit*3,
+        backgroundColor:'red',
+    },
     activityGridList:{
         display:'block',
         width: '100%',
@@ -204,7 +221,44 @@ const styles = theme => ({
         boxShadow: theme.shadows[5],
         padding: theme.spacing.unit * 4,
         alignContent: 'center',
-    }
+    },
+    chip: {
+        margin: theme.spacing.unit,
+      },
+    BadgePadding:{
+        padding: `0 ${theme.spacing.unit * 2}px`,
+        //paddingRight:theme.spacing.unit*2,
+    },
+    heading: {
+        fontSize: theme.typography.pxToRem(20),
+    },
+    secondaryHeading: {
+        fontSize: theme.typography.pxToRem(15),
+       // color: theme.palette.text.secondary,
+    },
+    icon: {
+        verticalAlign: 'bottom',
+        height: 20,
+        width: 20,
+    },
+    details: {
+        alignItems: 'center',
+      },
+      column: {
+        flexBasis: '33.33%',
+      },
+      helper: {
+        borderLeft: `2px solid ${theme.palette.divider}`,
+        padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
+      },
+      link: {
+        color: theme.palette.primary.main,
+        textDecoration: 'none',
+        '&:hover': {
+          textDecoration: 'underline',
+        },
+      },
+
 });
 
 class Supply extends Component{
@@ -234,14 +288,14 @@ const mapStateToProps = (state) => {
 }
 
 const SupplyItems = [
-    {id:"1",code:"co001",name:"ဦးမြ",description:"ရွှေဘို တောင်သူ",phone:"092053182",addr:"အမှတ် (၂) အိပ်အမှတ် ၇ , မင်းတုန်းလမ်း",township:"ရွှေဘို",division:"မန္တလေးမြို့"},
-    {id:"2",code:"b002",name:"ဦးဘ",description:"",phone:"09205212",addr:"",township:"ရွှေဘို",division:"မန္တလေးမြို့"},
-    {id:"3",code:"co002",name:"ဦးချစ်မောင်",description:"",phone:"09952141233",addr:"ပုဇွန်တောင်အထက်လမ်း တိုက် (၂) ၄ လွှာ",township:"ပုဇွန်တောင်",division:"ရန်ကုန်"},
-    {id:"4",code:"co390",name:"ဦးအောင်ကို",description:"",phone:"099543847372",addr:"",township:"",division:""},
-    {id:"1",code:"co199",name:"ဒေါ်ခင်အေး",description:"",phone:"09972226432",addr:"လမ်း ၅၀ အလယ်ဘလောက် တိုက် ၂၁",township:"ကျောက်တံတား",division:"ရန်ကုန်"},
-    {id:"2",code:"co453",name:"ဦးလှမောင်",description:"",phone:"092053182",addr:"ပုဇွန်တောင်အထက်လမ်း",township:"",division:""},
-    {id:"3",code:"co212",name:"ခင်နု",description:"",phone:"092053182",addr:"",township:"",division:""},
-    {id:"4",code:"co138",name:"မမြကြည်",description:"",phone:"09259116768",addr:"",township:"",division:""},
+    {id:"1",code:"co001",name:"ဌက်နီ",oname:"ဦးကောင်းတင့်",description:"",phone:["092328422","013134134"],addr:"အမှတ် (၂) အိပ်အမှတ် ၇ , မင်းတုန်းလမ်း",township:"ရွှေဘို",division:"မန္တလေးမြို့"},
+    {id:"2",code:"b002",name:"ဆင်မင်း",oname:"ဦးမြချစ်",description:"",phone:["985376264","09232312"],addr:"",township:"ရွှေဘို",division:"မန္တလေးမြို့"},
+    {id:"3",code:"co002",name:"ဦးချစ်မောင် ပွဲရုံ",oname:"ဦးတင်မြင့်နိုင်",description:"",phone:["092381411"],addr:"ပုဇွန်တောင်အထက်လမ်း တိုက် (၂) ၄ လွှာ",township:"ပုဇွန်တောင်",division:"ရန်ကုန်"},
+    {id:"4",code:"co390",name:"အောင်အောင်",oname:"ဦးအောင်ကို",description:"",phone:["091471874212"],addr:"",township:"",division:""},
+    {id:"1",code:"co199",name:"ရွှေခေတ်",oname:"ဦးမြကြည်",description:"",phone:["0172646","0128347","684727484"],addr:"လမ်း ၅၀ အလယ်ဘလောက် တိုက် ၂၁",township:"ကျောက်တံတား",division:"ရန်ကုန်"},
+    {id:"2",code:"co453",name:"မင်း",oname:"",description:"",phone:["044828472"],addr:"ပုဇွန်တောင်အထက်လမ်း",township:"",division:""},
+    {id:"3",code:"co212",name:"သိန်းသန်း",oname:"မခင်ထား",description:"",phone:["294817471","1938491","0193847"],addr:"",township:"",division:""},
+    {id:"4",code:"co138",name:"မတုတ်",oname:"မချစ်မ",description:"",phone:["918459283"],addr:"",township:"",division:""},
 ]
 const units=[
     {name:"တင်းရေ"},
@@ -286,7 +340,7 @@ class SupplyContent extends Component{
             <AppBar position="sticky" color="default">
                 <Toolbar className={classes.toolBar}>
                 <Typography variant="h6" color="primary">
-                    တောင်သူ
+                    ပွဲရုံးများ
                 </Typography>
                 <div className={classes.grow} />
                 <div className={classes.search}>
@@ -318,8 +372,8 @@ class SupplyContent extends Component{
                         <Button variant="extendedFab" aria-label="addNewItem" fullWidth className={classes.addButton}
                         onClick={this.handleDialog}
                         >             
-                            <AddIcon />
-                            တောင်သူ အသစ်ထည့်မည်
+                          
+                            ပွဲရုံး အသစ်ထည့်မည်
                         </Button>   
                         </div>
                         <Paper className={classes.paper} style={{marginTop:-20}}>
@@ -331,7 +385,7 @@ class SupplyContent extends Component{
                         </Paper>
                     </Grid>
                     <Grid item xs={12} sm={12} md={8}>
-                        
+                    selectedItem
                         <SupplyItemView data={this.state.selectedItem} classes={classes}/>
                          
                       
@@ -570,9 +624,10 @@ class SupplyItemUI extends Component{
                                         </IconButton>
                                         </Toolbar>
                                 </AppBar>
-                                <div style={{paddingTop:50}}>                                   
+                                <div style={{paddingTop:50}}>           
+                        
                                     <Typography component="h2" variant="headline" gutterBottom align="center">
-                                            {item.phone}                                           
+                                            {item.phone[0]}                                           
                                     </Typography>                    
                                     <Typography variant="subheading" gutterBottom align="center">
                                             {item.addr}
@@ -637,6 +692,14 @@ const events = [
     {ts: "2017-08-16T12:20:46.587Z", text: 'ကုန်ပစ္စည်း ထုပ်ယူသွားသည်'},
   ];
 
+const orderedItems = [
+    {serial:"9892841248",iname:"ပဲစိမ်း",quantity:"၅၀",lastdate:"17 Sep 2017",orderdate:"10 Aug 2017",unit:"အိတ်",all:false},
+    {serial:"9892841328",iname:"ရွှေဘိုပေါ်ဆန်း",quantity:"၂၀၀",lastdate:"15 Dec 2017",orderdate:"10 Aug 2017",unit:"အိတ်",all:false},
+    {serial:"9892121248",iname:"ပဲနီ",quantity:"၂၀",lastdate:"21 Dec 2017",orderdate:"10 July 2017",unit:"ပိသာ",all:true},
+    {serial:"9892841238",iname:"မပဲ",quantity:"၁၀၀",lastdate:"30 Dec 2018",orderdate:"10 Jun 2017",unit:"တင်းပဲ",all:true},
+    {serial:"9892812318",iname:"ပေါ်ဆန်းမွှေး",quantity:"၁၀",lastdate:"4 Dec 2017",orderdate:"10 Sep 2017",unit:"အိတ်",all:false},
+]
+  
 class SupplyItemView extends Component{
     constructor(props){
         super(props);
@@ -651,9 +714,12 @@ class SupplyItemView extends Component{
     }
    
     render(){
+        
         const { classes,data } = this.props;
         const { selectedView } = this.state;
+    
         return (
+            
             <div className={classes.view}>
                 <Grid container >
                     <Grid item xs={12}>                        
@@ -664,8 +730,16 @@ class SupplyItemView extends Component{
                         >
                             <Tabs value={selectedView}>
                                 <Tab label="ကိုယ်ရေးအကျဥ်းချုပ်" onClick={e=>this.handleChange(0)}/>
-                                <Tab label="သိုလှောင်ပစ္စည်းများ" onClick={e=>this.handleChange(1)}/>
-                                <Tab label="လုပ်ဆောင်ချက်များ" onClick={e=>this.handleChange(2)}/>
+                                <Tab label="ပေးပို့ပြိးသောပစ္စည်းများ" onClick={e=>this.handleChange(1)}/>
+                                <Tab onClick={e=>this.handleChange(2)}
+                                label={
+                                    <Badge className={classes.BadgePadding} color="secondary" badgeContent={5}>
+                                      မှာယူထားသောပစ္စည်းများ
+                                    </Badge>
+                                }
+                                
+                                />
+                                <Tab label="လုပ်ဆောင်ချက်များ" onClick={e=>this.handleChange(3)}/>
                             </Tabs>
                         </AppBar>    
                         {selectedView === 0 && 
@@ -673,7 +747,7 @@ class SupplyItemView extends Component{
                             <Grid container spacing={24}>
                                 <Grid item xs={12} sm={4}>
                                     <Typography variant="caption" gutterBottom align="left">
-                                            တောင်သူအမည်
+                                            ပွဲရုံ အမည်
                                     </Typography> 
                                     <spam className={classes.spacing} /> 
                                     <Typography variant="title" align="left">
@@ -682,13 +756,14 @@ class SupplyItemView extends Component{
                                 </Grid>
                                 <Grid item xs={12} sm={4}>
                                     <Typography variant="caption" gutterBottom align="left">
-                                            ဆက်သွယ်ရန်ဖုန်းနံပါတ်
+                                            ပိုင်ရှင် အမည်
                                     </Typography> 
                                     <spam className={classes.spacing} /> 
                                     <Typography variant="title" align="left">
-                                        {data.phone}
+                                        {data.oname}
                                     </Typography>
                                 </Grid>
+                                
                                 <Grid item xs={12} sm={4}>
                                     <Typography variant="caption" gutterBottom align="left">
                                             တိုင်းဒေသကြီး
@@ -698,7 +773,30 @@ class SupplyItemView extends Component{
                                         {data.division}
                                     </Typography>
                                 </Grid>
-                                
+                                <Grid item xs={12} sm={12}>
+                                    <Typography variant="caption" gutterBottom align="left">
+                                            ဆက်သွယ်ရန်ဖုန်းနံပါတ်
+                                    </Typography> 
+                                    <spam className={classes.spacing} /> 
+                                    <div className={classes.phones}>
+                                        {
+                                           data.phone.map(function(item, i){
+                                            return (
+                                                <Chip
+                                                avatar={
+                                                <Avatar>
+                                                    <PhoneIcon />
+                                                </Avatar>
+                                                }
+                                                    label={item}
+                                                    className={classes.chip}
+                                                />
+                                            )
+                                            })
+                                        }
+                                   
+                                    </div>
+                                </Grid>
                                 <Grid item xs={12} sm={12}>
                                     <Typography variant="caption" gutterBottom align="left">
                                             ဆက်သွယ်ရန်လိပ်စာ
@@ -721,28 +819,101 @@ class SupplyItemView extends Component{
                         </TabContainer>}
                         {selectedView === 1 && <TabContainer>
                             <div>
-                                <BarChart 
-                                    width={600} 
-                                    height={400}
-                                    data={store} 
-                                    layout="vertical"
-                                    margin={{top: 5, right: 100, left: 30, bottom: 5}}
-                                >
-                                    <XAxis type="number"/>
-                                    <YAxis type="category" dataKey="ကုန်ပစ္စည်းအမည်" />
-                                    <CartesianGrid strokeDasharray="3 3"/>
-                                <Tooltip/>
-                                <Legend />
-                                <Bar dataKey="ကုန်ပစ္စည်းအမည်" fill="#8884d8" />
-                                <Bar dataKey="ပမာဏ" fill="#82ca9d" />
-                                <Bar dataKey="အတိုင်းအတာယူနစ်" fill="red" />
-                                </BarChart>   
-                            </div>
-
-                                
+                                    <div className={classes.inLineLabel}>
+                                        <Typography variant="title" align="right">
+                                            {data.name} 
+                                        </Typography>
+                                    </div>
+                            </div>                                
 
                         </TabContainer>}
                         {selectedView === 2 && <TabContainer>
+                            <div>
+                                    <div className={classes.inLineLabel}>
+                                        <Typography variant="title" align="right">
+                                            {data.name} 
+                                        </Typography>
+                                    </div>
+                                    <br />
+                                    
+                                     {
+
+                                            orderedItems.map(i => (
+                                                    <ExpansionPanel>
+                                                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                                                        <div className={classes.column}>
+                                                            <Typography className={classes.heading}>
+                                                                    {i.iname}
+                                                            </Typography>
+                                                        </div>
+                                                        <div className={classes.column} />
+                                                        <div className={classes.column}>
+                                                            <Typography className={classes.secondaryHeading} color="secondary">
+                                                                    {i.lastdate}
+                                                            </Typography>
+                                                        </div>
+                                                    </ExpansionPanelSummary>
+                                                    <ExpansionPanelDetails className={classes.details}>
+                                                        <div className={classes.column}>
+                                                            <Typography variant="body2" align="center" color="#fff">
+                                                                 ကုန်ပစ္စည်းစတင်မှာယူသောနေ့ 
+                                                            </Typography>
+                                                            <spam className={classes.bpacing}/>
+                                                            <Typography variant="subheading" align="center" color="#fff">
+                                                                {i.orderdate} 
+                                                            </Typography>
+                                                        </div>
+                                                        <div className={classes.column}>
+                                                            <Typography variant="body2" align="center" color="#fff">
+                                                                 စုစုပေါင်းပမာဏ 
+                                                            </Typography>  
+                                                            <spam className={classes.bpacing}/>
+                                                            <Typography variant="h5" align="center" color="#fff">
+                                                                {i.quantity} {i.unit}
+                                                            </Typography>
+                                                        </div>
+                                                        <div className={classNames(classes.column, classes.helper)}>
+                                                            
+                                                                <Typography variant="body2" align="right">
+                                                                {
+                                                                    !i.all &&(
+                                                                        <spam>ပေးပို့ရန်ကျန်ရှိနေသေးပါသည်</spam>
+                                                                    )}
+                                                                {
+                                                                    i.all &&(
+                                                                        <spam>မှာရှိထားသည့်ကုန်ပစ္စည်း အရေအတွက်အားလုံးပေးပို့ပြီးပါသည်</spam>
+                                                                    )}
+                                                                <br />
+                                                                <a href="#sub-labels-and-columns" className={classes.link}>
+                                                                    စာရင်းကြည့်မည်
+                                                                </a>
+                                                                </Typography>
+                                                                                                   
+                                                                                                                         
+                                                        </div>
+                                                        </ExpansionPanelDetails>
+                                                        <Divider />
+                                                        <ExpansionPanelActions>                                                      
+                                                            <Button  variant="outlined" color="secondary" onClick={this.handleSnackMessage}>
+                                                                ပယ်ဖျက်မည်
+                                                            </Button>
+                                                            <spam className={classes.bpacing}/>
+                                                            {i.all && (
+                                                                <Button  variant="outlined" color="primary" onClick={this.handleSnackMessage}>
+                                                                 ပေးပိုပြီးပါသည်
+                                                                </Button>
+                                                            )}
+                                                           
+                                                        </ExpansionPanelActions>
+                                                </ExpansionPanel>
+                                                )
+                                            )
+                                        }     
+                                    
+                            </div>             
+     
+                        </TabContainer>}
+                        {selectedView === 3 && <TabContainer>
                             <GridList cellHeight={200} spacing={25} cols={1} className={classes.activityGridList}>
                                 <Timeline items={events} />
                             </GridList>                           
