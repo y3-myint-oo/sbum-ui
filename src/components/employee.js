@@ -28,12 +28,16 @@ import LeaveIcon from '@material-ui/icons/Drafts';
 import PosIcon from '@material-ui/icons/AccountBox';
 import PerIcon from '@material-ui/icons/TrendingUp';
 import EmpsIcon from '@material-ui/icons/Group';
+import TextField from '@material-ui/core/TextField'
+import MenuItem from '@material-ui/core/MenuItem';
 
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
+import Bloked from './blocked';
 
-
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 const styles = theme => ({
     test:{
@@ -78,6 +82,28 @@ const styles = theme => ({
         paddingTop: theme.spacing.unit*10,
         paddingBottom: theme.spacing.unit*3,
     },
+    employeeName:{
+        marginLeft:'auto',
+        marginRight:0,
+    },
+    StepperBox:{
+        minWidth:'100vh',
+   }, 
+    cssFocused: {
+        color:"green",
+    },
+    cssUnderline: {
+     '&:after': {
+       borderBottomColor: 'red',
+     },
+    },
+    cssOutlinedInput: {
+     '&$cssFocused $notchedOutline': {
+       borderColor: 'green',
+     },
+    },
+    notchedOutline: {},  
+
 });
 
 class Employees extends Component{
@@ -338,10 +364,14 @@ class AddEmpContent extends Component{
         return(
             <div>
                    <div className={classes.stepBox}>
-                        <Grid container>
-                            
-                            <Grid item xs={12}>
-                                <Stepper alternativeLabel nonLinear activeStep={activeStep}>
+                        <Grid
+                        container
+                        direction="column"
+                        justify="center"
+                        alignItems="center"
+                        >                            
+                            <Grid item xs={12} md={12}>
+                                <Stepper alternativeLabel nonLinear activeStep={activeStep} className={classes.StepperBox}>
                                 {steps.map((label, index) => {
                                             const props = {};
                                             const labelProps = {};
@@ -367,7 +397,7 @@ class AddEmpContent extends Component{
                                 </div>
                             ) : (
                                 <div className={classes.box}>
-                                    <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+                                    <StepContent activeStep={activeStep} classes={classes} />
                                 </div>
                                  )}                        
                                 </Grid>
@@ -383,9 +413,11 @@ class AddEmpContent extends Component{
                                         </Grid>
                                     </Grid>
                                 ):(
-                                    <Grid item xs={12}>
-                                    <Grid container align="center">
-                                    <Grid item xs={4}>
+                                    <Grid item xs={12} md={12}>
+                                    <Grid container  
+                                    alignItems="center"
+                                    className={classes.StepperBox}>
+                                    <Grid item xs={4} sm={4} md={4}>
                                         <Button
                                             disabled={activeStep === 0}
                                             onClick={this.handleBack}
@@ -394,7 +426,7 @@ class AddEmpContent extends Component{
                                            အနောက်သို့
                                         </Button>
                                     </Grid>
-                                    <Grid item xs={4}>
+                                    <Grid item xs={4} sm={4} md={4} align="center">
                                         {this.isStepOptional(activeStep) && (
                                             <Button
                                                 variant="contained"
@@ -406,7 +438,7 @@ class AddEmpContent extends Component{
                                         </Button>
                                         )}
                                     </Grid>
-                                    <Grid item xs={4}>
+                                    <Grid item xs={4} sm={4} md={4} align="right">
                                         <Button
                                             variant="contained"
                                             color="primary"
@@ -427,32 +459,176 @@ class AddEmpContent extends Component{
     }
     
 }
-    function getSteps() {
+const positions=[
+    {value:"general",label:"အထွေထွေ၀န်ထမ်း"},
+    {value:"account",label:"စာရင်းကိုင်"},
+    {value:"manager",label:"မန်နေဂျာ"},
+]
+
+function getSteps() {
         return ['ကိုယ်ရေးအချက်အလက်ဖြည့်မည်', 'မှတ်ပုံတင်မည်', 'ပြုလုပ်ရန်သေချာပါသည်'];
-    }
-  
-    function getStepContent(step) {
-        switch (step) {
+}
+
+class StepContent extends Component{
+    constructor(props){
+        super(props);
+        this.state={
+            name:"",
+            nrc:"",
+            phone:"",
+            position:"",
+            address:"",
+        }       
+        this.handleChange=this.handleChange.bind(this)      
+    } 
+    handleChange = name => event => {
+        this.setState({
+          [name]: event.target.value,
+        });
+    };
+    render(){
+        const {classes} = this.props;
+        switch (this.props.activeStep) {
         case 0:
-            return <div>
-                
-            </div>
-            
+            return <div style={{padding:20}}>
+                <Grid container spacing={8}>
+                    <Grid item xs={12} ms={6} md={6}>
+                    <TextField 
+                        id="employee-name"
+                        InputProps={{
+                            classes: {
+                              root: classes.cssOutlinedInput,
+                              focused: classes.cssFocused,
+                              notchedOutline: classes.notchedOutline,
+                            },
+                        }}
+                        label="အမည်"
+                        value={this.state.ename}
+                        fullWidth
+                        onChange={this.handleChange('name')}
+                        margin="normal"
+                        variant="outlined"
+                        />
+                    </Grid>
+                    <Grid item xs={12} ms={6} md={6}>
+                    <TextField                    
+                        id="employee-nrc"
+                        label="မှတ်ပုံတင်နံပါတ်"
+                        value={this.state.nrc}
+                        fullWidth
+                        onChange={this.handleChange('nrc')}
+                        margin="normal"
+                        variant="outlined"
+                        />
+                    </Grid>
+                    <Grid item xs={12} ms={6} md={6}>
+                    <TextField                    
+                        id="employee-phone"
+                        label="ဆက်သွယ်ရန်ဖုန်းနံပါတ်"
+                        value={this.state.phone}
+                        fullWidth
+                        onChange={this.handleChange('phone')}
+                        margin="normal"
+                        variant="outlined"
+                        />
+                    </Grid>
+                    <Grid item xs={12} ms={6} md={6}>
+                    <TextField                    
+                        id="employee-position"
+                        label="လုပ်ငန်းတာ၀န်"
+                        select
+                        value={this.state.position}
+                        fullWidth
+                        onChange={this.handleChange('position')}
+                        margin="normal"
+                        variant="outlined"
+                    >
+                    {positions.map(option => (
+                            <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                            </MenuItem>
+                    ))}
+                    </TextField>
+                    </Grid>
+                    <Grid item xs={12} ms={12} md={12}>
+                    <TextField                    
+                        id="employee-address"
+                        label="နေရပ်လိပ်စာ"
+                        value={this.state.address}
+                        fullWidth
+                        onChange={this.handleChange('address')}
+                        margin="normal"
+                        variant="outlined"
+                        />
+                    </Grid>
+                </Grid>
+            </div>              
         case 1:
-            return '၀န်ထမ်း၏ နိုင်ငံသားကပ်ပြားအား မှတ်ပုံတင်မည်';
+            return  <Bloked msg="၀န်ထမ်း၏ နိုင်ငံသားကပ်ပြားအား မှတ်ပုံတင်မည်" dec="အထက်ပါအကြောင်းအရာအား အသုံးပြုလိုပါသည်။" />
         case 2:
-            return 'This is the bit I really care about!';
+            return <div style={{padding:20}}>
+            <Grid container spacing={8}>
+                <Grid item xs={12} ms={6} md={6}>
+                    <Typography variant="caption" gutterBottom align="left">
+                         အမည်
+                    </Typography>
+                    <Typography variant="h6" >
+                        {this.state.name}
+                    </Typography>
+                </Grid>    
+                <Grid item xs={12} ms={6} md={6}>
+                    <Typography variant="caption" gutterBottom align="left">
+                        မှတ်ပုံတင်နံပါတ်
+                    </Typography>
+                    <Typography variant="h6" >
+                        {this.state.nrc}
+                    </Typography>
+                </Grid>
+                <Grid item xs={12} ms={6} md={6}>
+                    <Typography variant="caption" gutterBottom align="left">
+                    ဆက်သွယ်ရန်ဖုန်းနံပါတ်
+                    </Typography>
+                    <Typography variant="h6" >
+                        {this.state.phone}
+                    </Typography>
+                </Grid>
+                <Grid item xs={12} ms={6} md={6}>
+                    <Typography variant="caption" gutterBottom align="left">
+                    လုပ်ငန်းတာ၀န်
+                    </Typography>
+                    <Typography variant="h6" >
+                        {this.state.position}
+                    </Typography>   
+                </Grid>
+                <Grid item xs={12} ms={12} md={12}>
+                    <Typography variant="caption" gutterBottom align="left">
+                     နေရပ်လိပ်စာ
+                    </Typography>
+                    <Typography variant="h6" >
+                        {this.state.address}
+                    </Typography>  
+                </Grid>
+            </Grid>
+        </div>            
         default:
             return 'Unknown step';
+ 
+        }
     }
-  }
+}
 
 class PayRollContent extends Component{
+    constructor(props){
+        super(props);
+        this.state={
+            selectedView:0,
+        }              
+    } 
     render(){
-       
+        const { selectedView } = this.state;
         return(
             <div>
-                Manage Pay roll 
+               
             </div>
         )
     }
@@ -492,8 +668,8 @@ class PositionContent extends Component{
 class PerforContent extends Component{
     render(){
         return(
-            <div>
-                Manage Performance Content
+            <div style={{padding:20}}>
+                <Bloked msg="၀န်ထမ်းများ၏ လုပ်ငန်းစွမ်းဆောင်ရေအပိုင်းအား တွက်ချက်ပေးသည့် system ဖြစ်ပါသည်" dec="အထက်ပါအကြောင်းအရာအား အသုံးပြုလိုပါသည်။"/>
             </div>
         )
     }
@@ -501,12 +677,14 @@ class PerforContent extends Component{
 
 class EmpsContent extends Component{
     render(){
+       
         return(
             <div>
-                
+                Manage Pay roll 
             </div>
         )
     }
+   
 }
 
 

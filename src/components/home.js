@@ -12,14 +12,16 @@ import Warehouse from './warehouse';
 import Setting from './setting';
 import Supply from './supply';
 import Agent from './agent';
-import Users from './users';
+import Unit from './unit';
+import Finacial from './financial';
 import Employees from './employee';
 import DashboardIcon from '@material-ui/icons/ViewQuilt';
 import WarehouseIcon from '@material-ui/icons/StoreMallDirectory';
 import SettingIcon from '@material-ui/icons/Settings'
 import SupplyIcon from '@material-ui/icons/LocalShipping';
 import AgentIcon from '@material-ui/icons/ShoppingCart';
-import UsersIcon from '@material-ui/icons/Group';
+import UnitIcon from '@material-ui/icons/Loop';
+import FinacialIcon from '@material-ui/icons/AttachMoney';
 import EmployIcon from '@material-ui/icons/DirectionsWalk';
 
 const styles = theme => ({
@@ -92,6 +94,14 @@ class Home extends Component{
                             Agent
                         </NavText>
                     </NavItem>
+                    <NavItem eventKey="finacial">
+                        <NavIcon>
+                            <FinacialIcon />
+                        </NavIcon>
+                        <NavText>
+                            Finacial
+                        </NavText>
+                    </NavItem>
                     <NavItem eventKey="employees">
                         <NavIcon>
                             <EmployIcon />
@@ -100,12 +110,13 @@ class Home extends Component{
                             Employees
                         </NavText>
                     </NavItem>
-                    <NavItem eventKey="users">
+                    
+                    <NavItem eventKey="unit">
                         <NavIcon>
-                            <UsersIcon />
+                            <UnitIcon />
                         </NavIcon>
                         <NavText>
-                            Users
+                            Unit
                         </NavText>
                     </NavItem>
                     <NavItem eventKey="setting">
@@ -125,7 +136,8 @@ class Home extends Component{
                 <Route path="/supply" component={props => <Supply />} />
                 <Route path="/agent" component={props => <Agent />} />
                 <Route path="/employees" component={props => <Employees />} />
-                <Route path="/users" component={props => <Users />} />
+                <Route path="/unit" component={props => <Unit />} />
+                <Route path="/finacial" component={props => <Finacial /> } />
             </main>
         </React.Fragment>
         )}
