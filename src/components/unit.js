@@ -14,8 +14,10 @@ import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Loop';
-import AliceCarousel from 'react-alice-carousel';
-import "react-alice-carousel/lib/alice-carousel.css";
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
 
 const styles = theme => ({
     root: {
@@ -41,6 +43,22 @@ const styles = theme => ({
         width: '50hw',
         height:'50vh',
         backgroundColor: 'red',
+    },
+    card: {
+        maxWidth: '50hw',
+        boxShadow: '0px 0px 10px 0px rgba(76,175,80, .9)',
+    },
+    card2:{
+        width:'auto',
+        height:120,
+        boxShadow: '0px 0px 10px 0px rgba(76,175,80, .9)',
+    },
+    gridList:{
+        paddingLeft: theme.spacing.unit*5,
+        paddingRight: theme.spacing.unit*5,
+        width: '100%',
+        height: '70vh',
+       // backgroundColor:'red',
     }
 });
 
@@ -66,48 +84,69 @@ class Unit extends Component{
 
 
 const units = [
-    {id:"0001",name:"တင်းရေ",count:"၁"},
-    {id:"0002",name:"အိတ်",count:"၁"},
-    {id:"0003",name:"ပြည်",count:"၁"},
-    {id:"0004",name:"ပိသာ",count:"၁"},
+    {id:"0001",name:"တင်းရေ",count:"၁",
+        converter:[
+            {name:"တင်းရေ",cross:"၁"},
+            {name:"အိတ်",cross:"၂၀"},
+            {name:"ပြည်",cross:"၂"},
+            {name:"ပိသာ",cross:"၁"},
+        ]
+    },
+    {id:"0002",name:"အိတ်",count:"၂",
+        converter:[
+            {name:"တင်းရေ",cross:"၁၀"},
+            {name:"အိတ်",cross:"၂"},
+            {name:"ပြည်",cross:"၂"},
+            {name:"ပိသာ",cross:"၁"},
+        ]
+    },
+    {id:"0003",name:"ပြည်",count:"၁",
+        converter:[
+            {name:"တင်းရေ",cross:"၁၀"},
+            {name:"အိတ်",cross:"၂၀"},
+            {name:"ပြည်",cross:"၁"},
+            {name:"ပိသာ",cross:"၁၁"},
+        ]
+    },
+    {id:"0004",name:"ပိသာ",count:"၁",
+        converter:[
+            {name:"တင်းရေ",cross:"၁၀"},
+            {name:"အိတ်",cross:"၂၀"},
+            {name:"ပိသာ",cross:"၁"},
+           
+        ]
+    },
 ]
+
+
+
 class UnitContent extends Component{
-    
     constructor(props){
         super(props);
         this.state={
-          
+            selectedIndex:0,
         }        
+        this.handleBack=this.handleBack.bind(this)
+        this.handleForward=this.handleForward.bind(this)
+
     } 
-    onSlideChange(e) {
-        console.log('Item`s position during a change: ', e.item);
-        console.log('Slide`s position during a change: ', e.slide);
-    };
-    
-    onSlideChanged(e) {
-        console.log('Itemitem`s position after changes: ', e.item);
-        console.log('Slide`s position after changes: ', e.slide);
-    };
-
-    galleryItems() {
-        return (
-            units.map((unit, i) => (            
-            <div key={`key-${i}`} style={{padding:20}}>
-             <Typography variant="title" align="center">   
-                {unit.count}
-             </Typography>   
-             <br />
-             <br />
-             <Typography variant="h2" align="center">   
-                {unit.name}
-             </Typography>
-            </div>
-          ))
-        )
-    };
-
+    handleBack(){
+        if ( this.state.selectedIndex == 0 ){
+            this.setState({selectedIndex:units.length-1})
+        }else{
+            this.setState({selectedIndex:this.state.selectedIndex-1})
+        }
+    }
+    handleForward(){
+        if ( this.state.selectedIndex == units.length-1 ){
+            this.setState({selectedIndex:0})
+        }else{
+            this.setState({selectedIndex:this.state.selectedIndex+1})
+        }
+    } 
+   
     render(){
-        const items = this.galleryItems();
+        const unit = units[this.state.selectedIndex];
         const { classes } = this.props;
         return(
             <div className={classes.root}>
@@ -126,23 +165,38 @@ class UnitContent extends Component{
                 <div className={classes.box}>
                     <Grid container>
                         <Grid item md={4}> 
-                            <Grid container>
+                            <Grid container spacing={8}>
+                                <Grid item xs={6} sm={6} md={6} align="left">
+                                        <Button                                        
+                                            onClick={this.handleBack}
+                                            variant="outlined" color="primary"
+                                            >
+                                           အနောက်သို့
+                                        </Button>
+                                </Grid>
+                                <Grid item xs={6} sm={6} md={6} align="right">
+                                        <Button                                                                                       
+                                            onClick={this.handleForward}
+                                            variant="outlined" color="primary"
+                                            >
+                                            အရှေ့သို့
+                                        </Button>
+                                </Grid>
                                 <Grid item md={12}>
-                                <AliceCarousel
-                                    items={items}
-                                    duration={400}
-                                    autoPlay={true}
-                                    startIndex = {1}
-                                    fadeOutAnimation={true}
-                                    mouseDragEnabled={true}
-                                  ///  playButtonEnabled={true}
-                                    autoPlayInterval={2000}
-                                    autoPlayDirection="rtl"
-                                   // responsive={this.responsive}
-                                    disableAutoPlayOnAction={true}
-                                    onSlideChange={this.onSlideChange}
-                                    onSlideChanged={this.onSlideChanged}
-                                />  
+                                    <Card className={classes.card}>
+                                        <CardActionArea>
+                                            <CardContent>
+                                                <Typography gutterBottom variant="title" align="center">
+                                                    {unit.count}
+                                                </Typography>
+                                                <br />
+
+                                                <Typography gutterBottom variant="h2" align="center">
+                                                    {unit.name}
+                                                </Typography>
+                                            </CardContent>
+                                        </CardActionArea>
+                                    </Card>    
                                 </Grid>
                                 <Grid item md={12}>
                                     Add New Unit
@@ -150,7 +204,25 @@ class UnitContent extends Component{
                             </Grid>
                         </Grid>
                         <Grid item md={8}>
-                            Right
+                            <GridList cellHeight={80} className={classes.gridList}  cols={4} spacing={8}>
+                                {
+                                   unit.converter.map(function(item, i){
+                                       console.log(item)
+                                        return <div key={i}>
+                                            <Card className={classes.card2}>
+                                                <CardContent>
+                                                    <Typography gutterBottom variant="h5" align="center">
+                                                        {item.name}
+                                                    </Typography>
+                                                    <Typography gutterBottom variant="h4" align="center">
+                                                        {item.cross}
+                                                    </Typography>
+                                                </CardContent>                                             
+                                            </Card>                                                
+                                        </div>
+                                  })
+                                }
+                            </GridList>
                         </Grid>
                     </Grid>
                 </div>
