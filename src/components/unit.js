@@ -50,15 +50,13 @@ const styles = theme => ({
     },
     card2:{
         width:'auto',
-        height:120,
+        height:'auto',
         boxShadow: '0px 0px 10px 0px rgba(76,175,80, .9)',
     },
     gridList:{
-        paddingLeft: theme.spacing.unit*5,
-        paddingRight: theme.spacing.unit*5,
+        padding: theme.spacing.unit*5,
         width: '100%',
         height: '70vh',
-       // backgroundColor:'red',
     }
 });
 
@@ -110,6 +108,12 @@ const units = [
     },
     {id:"0004",name:"ပိသာ",count:"၁",
         converter:[
+            {name:"တင်းရေ",cross:"၁၀"},
+            {name:"အိတ်",cross:"၂၀"},
+            {name:"ပိသာ",cross:"၁"},
+            {name:"တင်းရေ",cross:"၁၀"},
+            {name:"အိတ်",cross:"၂၀"},
+            {name:"ပိသာ",cross:"၁"},
             {name:"တင်းရေ",cross:"၁၀"},
             {name:"အိတ်",cross:"၂၀"},
             {name:"ပိသာ",cross:"၁"},
@@ -204,10 +208,9 @@ class UnitContent extends Component{
                             </Grid>
                         </Grid>
                         <Grid item md={8}>
-                            <GridList cellHeight={80} className={classes.gridList}  cols={4} spacing={8}>
+                            <GridList className={classes.gridList} cellHeight="130" spacing={8} cols={4}>
                                 {
                                    unit.converter.map(function(item, i){
-                                       console.log(item)
                                         return <div key={i}>
                                             <Card className={classes.card2}>
                                                 <CardContent>
@@ -222,6 +225,8 @@ class UnitContent extends Component{
                                         </div>
                                   })
                                 }
+                                                                          
+                                
                             </GridList>
                         </Grid>
                     </Grid>
