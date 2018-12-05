@@ -122,6 +122,11 @@
   border-image-slice: 1;
 
 }
+.calendar .cell .loan {
+  border: 2px solid transparent;
+  border-image: linear-gradient(60deg, #ee00ff 0%,#f44336 40%);
+  border-image-slice: 1;
+}
 
 .calendar .row {
   border-bottom: 1px solid var(--border-color);

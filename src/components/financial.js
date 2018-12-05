@@ -12,6 +12,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import { fade } from '@material-ui/core/styles/colorManipulator';
+import Blocked from './blocked';
 
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -62,16 +63,13 @@ const styles = theme => ({
         flexDirection: 'column',
     },
     paper: {
-        //zIndex: -1,
-
         paddingLeft: theme.spacing.unit*2,
         position: 'relative',
         margin: theme.spacing.unit,
         width:'100%',
         height:'75vh',
         boxShadow: '0px 0px 0px 0px rgba(76,175,80, 1)',
-        //marginTop: -30,
-      },
+    },
     button:{
         marginLeft: theme.spacing.unit,
         padding:theme.spacing.unit,
@@ -85,9 +83,7 @@ const styles = theme => ({
         height: theme.spacing.unit*55,     
         paddingTop:theme.spacing.unit*3,
     },
-    yearBox:{
-        paddingTop:theme.spacing.unit*10,
-    }
+    
 });
 
 class Financial extends Component{
@@ -343,19 +339,302 @@ class BalanceSheetContent extends Component{
     constructor(props){
         super(props);
         this.state={
+           currentCate:0,
            currentView:0,
+           currentDate:new Date(),
         }        
         this.handleSwapView=this.handleSwapView.bind(this)
+        this.handleSwapCate=this.handleSwapCate.bind(this)
+    }
+    handleSwapCate(value){
+        this.setState({currentCate:value})
     } 
     handleSwapView(value){
         this.setState({currentView:value})
     }
+
+    prev = () => {
+        switch(this.state.currentView){
+            case 0:
+            return  this.setState({
+                    currentDate: dateFns.subDays(this.state.currentDate, 1)
+                });                
+            case 1:
+            return  this.setState({
+                    currentDate: dateFns.subMonths(this.state.currentDate, 1)
+                });
+            case 2:
+            return  this.setState({
+                    currentDate: dateFns.subYears(this.state.currentDate, 1)
+                });
+        }
+       
+    }
+    next = () => {
+        switch(this.state.currentView){
+            case 0:
+            return  this.setState({
+                    currentDate: dateFns.addDays(this.state.currentDate, 1)
+                });
+            case 1:
+            return  this.setState({
+                    currentDate: dateFns.addMonths(this.state.currentDate, 1)
+                });
+            case 2:
+            return  this.setState({
+                    currentDate: dateFns.addYears(this.state.currentDate, 1)
+                });
+        }        
+    }
+
     render(){
+        const dateFormatHeader = ["DD MMM YYYY"," MMM YYYY","YYYY"];
+        const { classes } =this.props;
         return(
             <div>
-                BalanceSheetContent
+                <Grid container spacing={8}>
+                        <Grid item md={12} style={{paddingBottom:50,paddingLeft:30}}>
+                            <Grid  container >
+                                <Grid item md={6} align="left">
+                                    <div style={{display:"flex",width:'100%'}}>
+                                        <Typography variant="h5" onClick={e=>this.handleSwapCate(0)}
+                                        color={
+                                           this.state.currentCate==0 ? "primary":"" 
+                                        }
+                                        style={{cursor:'default'}}
+                                        >
+                                            ငွေသားတန်ဖိုး
+                                        </Typography> 
+                                        <Typography variant="h5">
+                                        &nbsp;၊&nbsp;
+                                        </Typography>
+                                        <Typography   variant="h5" onClick={e=>this.handleSwapCate(1)}
+                                        color={
+                                            this.state.currentCate==1 ? "primary":"" 
+                                        }
+                                        style={{cursor:'default'}}
+                                        >
+                                            ပစ္စည်းတန်ဖိုး
+                                        </Typography>  
+                                    </div>                   
+                                </Grid>
+                                <Grid item md={6} align="right">
+                                    <Button variant="contained" size="medium" color="primary" className={classes.button} onClick={e=>this.handleSwapView(0)}>
+                                        နေ့စဥ်
+                                    </Button> 
+                                    <Button variant="contained" size="medium" color="primary" className={classes.button} onClick={e=>this.handleSwapView(1)}>
+                                        လစဥ်
+                                    </Button> 
+                                    <Button variant="contained" size="medium" color="primary" className={classes.button} onClick={e=>this.handleSwapView(2)}>
+                                        နှစ်စဥ်
+                                    </Button> 
+                                </Grid>                               
+                            </Grid>
+                        </Grid>
+                        <Grid item md={5}>
+                            <Grid container>
+                                <Grid item item md={12} >
+                                        <Grid container  align="center">
+                                            <Grid item md={4} align="left">
+                                                <IconButton>
+                                                    <LeftIcon fontSize="large" onClick={this.prev}/>
+                                                </IconButton>
+                                            </Grid>
+                                            <br />
+                                            <Grid item md={4} align="center">
+                                                <Typography variant="h5" >                                                    
+                                                    {dateFns.format(this.state.currentDate,dateFormatHeader[this.state.currentView])}
+                                                </Typography>   
+                                            </Grid>
+                                            <Grid item md={4} align="right">
+                                                <IconButton>
+                                                    <RightIcon fontSize="large" onClick={this.next}/>
+                                                </IconButton>     
+                                            </Grid>
+                                        </Grid>
+                                </Grid>
+                                
+                                        {
+                                            this.state.currentCate == 0 &&(
+                                                <div>
+                                                    <Grid item md={12}>  
+                                                    <Slide direction="up" style={{ trgotoUpansitionDelay: false ? '500ms' : '0ms' }} in={true} mountOnEnter unmountOnExit>
+                                                            <paper>
+                                                                <div style={{padding:20}}> 
+                                                                    
+                                                                <Typography variant="subheading" >
+                                                                ၀င်ငွေ
+                                                                </Typography>
+                                                                <Typography variant="h4"
+                                                                color="primary"
+                                                                >
+                                                                    ၁၂၈၃၈၄၇၁
+                                                                </Typography>
+                                                                <br />
+                                                                <Typography variant="caption" style={{color:'blue',cursor:'help'}}>
+                                                                စာရင်းကြည့်မည်
+                                                                </Typography>
+                                                                </div>                                        
+                                                            </paper>
+                                                        </Slide>
+                                                    </Grid>  
+                                                    <Grid item md={12}>
+                                                        <Slide direction="up" style={{ trgotoUpansitionDelay: false ? '500ms' : '0ms' }} in={true} mountOnEnter unmountOnExit>
+                                                            <paper>
+                                                                <div style={{padding:20}}> 
+                                                                <Typography variant="subheading" >
+                                                                ထွက်ငွေ
+                                                                </Typography>
+                                                                <Typography variant="h4" 
+                                                                color="secondary"
+                                                                >
+                                                                    ၃၀၈၁၈၀
+                                                                </Typography>
+                                                                <br />
+                                                                <Typography variant="caption" style={{color:'blue',cursor:'help'}}>
+                                                                စာရင်းကြည့်မည်
+                                                                </Typography>
+                                                                </div>                                        
+                                                            </paper>
+                                                        </Slide>
+                                                    </Grid>
+                                                </div>
+                                            )
+                                        }  
+                                        {
+                                            this.state.currentCate == 1 &&(
+                                                <div>
+                                                    Categories
+                                                </div>
+                                            )
+                                        }                                            
+                            </Grid>            
+                        </Grid>
+
+                        <Grid item md={7}>
+                            {
+                                this.state.currentView == 0 &&  (
+                                    <Blocked msg="ယနေ့အတွက် အကြွေးစာရင် မှတ်စု မရှိပါ" dec="" />  
+                                )
+                            }
+                            {
+                                this.state.currentView == 1 && (
+                                    <div>
+                                       <CalendarMonthWithout currentMonth={this.state.currentDate}/>
+                                    </div>
+                                )
+                            }
+                           
+                        </Grid>
+                       
+                </Grid>
             </div>    
         )
+    }
+}
+
+const loan = [
+    {date:"12 Dec 2018"},
+]
+
+class CalendarMonthWithout extends Component {
+    constructor(props){
+        super(props);
+        this.state={
+          //  currentMonth: this.props.selectedMonth,
+            selectedDate: new Date()
+        }        
+        this.renderCalendar=this.renderCalendar.bind(this);
+    }         
+    renderCalendar() {
+        const { classes,flag } = this.props;
+        const dateFormatHeader = "MMMM YYYY";
+        const dayFormat = "ddd";
+        const daysHeader = [];
+        let startDateHeader = dateFns.startOfWeek(this.props.currentMonth);
+        for (let i = 0; i < 7; i++) {
+            daysHeader.push(
+              <div className="col col-center" key={i}>
+                {dateFns.format(dateFns.addDays(startDateHeader, i), dayFormat)}
+              </div>
+            );
+        }
+
+        //Cells
+        const { selectedDate } = this.state;
+        const { currentMonth } = this.props;
+        const monthStart = dateFns.startOfMonth(currentMonth);
+        const monthEnd = dateFns.endOfMonth(monthStart);
+        const startDate = dateFns.startOfWeek(monthStart);
+        const endDate = dateFns.endOfWeek(monthEnd);
+        const dateFormat = "D";
+        const rows = [];
+        let days = [];
+        let day = startDate;
+        let formattedDate = "";
+        while (day <= endDate) {
+            for (let i = 0; i < 7; i++) {
+              formattedDate = dateFns.format(day, dateFormat);
+              const cloneDay = day;
+              console.log(" ------------- day format ", dateFns.format(cloneDay,"D MMM YYYY"))
+              days.push(
+                <div
+                  className={`col cell ${
+                    !dateFns.isSameMonth(day, monthStart)
+                      ? "disabled"
+                      : dateFns.isSameDay(day, selectedDate) ? "selected" : ""
+                  }`}
+                  key={day}
+                  onClick={() => this.onDateClick(dateFns.parse(cloneDay))}
+                >
+                  <div className="col col-center">{formattedDate}</div>
+                 
+                </div>
+              );
+              day = dateFns.addDays(day, 1);
+            }
+            rows.push(
+              <div className="row" key={day}>
+                {days}
+              </div>
+            );
+            days = [];
+        }
+
+        return (
+            <Grid container>               
+                <Grid item md={12}>
+                    <div className="days row">{daysHeader}</div>
+                    <div className="calendar">{rows}</div>
+                </Grid>
+            </Grid>
+        )
+
+    }
+    
+    onDateClick = day => {
+        this.setState({
+            selectedDate: day
+        });
+    }
+    nextMonth = () => {
+        this.setState({
+            currentMonth: dateFns.addMonths(this.state.currentMonth, 1)
+        });
+    }
+    prevMonth = () => {
+        this.setState({
+            currentMonth: dateFns.subMonths(this.state.currentMonth, 1)
+        });
+    }
+
+
+    render() {
+      return (
+        <div>
+            {this.renderCalendar()}                  
+        </div>
+      );
     }
 }
 
@@ -397,6 +676,8 @@ class CalendarMonth extends Component {
             for (let i = 0; i < 7; i++) {
               formattedDate = dateFns.format(day, dateFormat);
               const cloneDay = day;
+              const checkLoan = dateFns.format(cloneDay, "D MMM YYYY")
+              console.log(" ------------ ", checkLoan)
               days.push(
                 <div
                   className={`col cell ${
@@ -616,7 +897,7 @@ class CalendarYear extends Component {
                     <Grid container>
                         <Grid item md={4} align="left">
                             <IconButton>
-                                <LeftIcon fontSize="large" onClick={this.prevYear}/>
+                                <LeftIcon fontSize="small" onClick={this.prevYear}/>
                             </IconButton>
                         </Grid>
                         <Grid item md={4} align="center">
@@ -628,7 +909,7 @@ class CalendarYear extends Component {
                         </Grid>
                         <Grid item md={4} align="right">
                             <IconButton>
-                                <RightIcon fontSize="large" onClick={this.nextYear}/>
+                                <RightIcon fontSize="small" onClick={this.nextYear}/>
                             </IconButton>     
                         </Grid>
                     </Grid>         
@@ -711,5 +992,7 @@ class CalendarYear extends Component {
       );
     }
 }
+
+
 
 export default connect(mapStateToProps, null)(withStyles(styles)(Financial))
