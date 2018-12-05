@@ -28,9 +28,12 @@ import DateIcon from '@material-ui/icons/Email';
 
 import DownIcon from '@material-ui/icons/KeyboardArrowDown';
 import TopIcon from '@material-ui/icons/KeyboardArrowUp';
+import LeftIcon from '@material-ui/icons/KeyboardArrowLeft';
+import RightIcon from '@material-ui/icons/KeyboardArrowRight';
 import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
-
+import dateFns from "date-fns";
+import '../Calendar.css';
 
 const styles = theme => ({
     fab: {
@@ -82,6 +85,9 @@ const styles = theme => ({
         height: theme.spacing.unit*55,     
         paddingTop:theme.spacing.unit*3,
     },
+    yearBox:{
+        paddingTop:theme.spacing.unit*10,
+    }
 });
 
 class Financial extends Component{
@@ -222,19 +228,13 @@ class IncomeStatementContent extends Component{
            currentView:0,
         }        
         this.handleSwapView=this.handleSwapView.bind(this)
-        this.handleTop =this.handleTop.bind(this)
     } 
     handleSwapView(value){
         this.setState({currentView:value})
     }
-    handleTop(){
-        console.log("Going to Top")
-    }
-    handleDown(){
-        console.log("Going to Down")
-    }
     render(){
         const { classes } = this.props;
+        
         return(
             <Grid container>
                 <Grid item xs={12}>
@@ -252,58 +252,29 @@ class IncomeStatementContent extends Component{
                     <Grid item xs={12}>
                       
                         {this.state.currentView ==0 &&(
-
-
-
                             <Slide direction="left" style={{ trgotoUpansitionDelay: false ? '500ms' : '0ms' }} in={true} mountOnEnter unmountOnExit>
-                              
-                              
-                              <Paper className={classes.paper}>
-                                     
-
-                                    <Grid container>
-
-                                        
-                                        <Grid item md={4} align="center">
-                                            <IconButton>
-                                                <TopIcon fontSize="large" onClick={this.handleTop}/>
-                                            </IconButton>  
-                                            <Typography variant="title" >
-                                                15 Sep 2017
-                                            </Typography>
-                                            <br />
-                                            <Typography variant="title" >
-                                                စုစုပေါင်း၀င်ငွေ
-                                            </Typography>
-                                            <br />  
-                                            <Typography variant="h3" >
-                                                 ၂၀၁၃၄၂၀၀
-                                            </Typography>
-                                            <br />  
-                                            <Typography variant="subtitle" >
-                                                 ကျပ်
-                                            </Typography>
-                                            <IconButton>
-                                                <DownIcon fontSize="large" onClick={this.handleDown}/>
-                                            </IconButton> 
-                                        </Grid>
-                                        <Grid item md={4}>
-                                            <Typography variant="title" align="center">
-                                                 စာရင်းမှတ်တမ်း
-                                            </Typography>
-                                            <br />
-                                            <GridList cellHeight={200} spacing={25} cols={1} className={classes.activityGridList}>
-                                                <Timeline items={events} />
-                                            </GridList>                                             
-                                        </Grid>
-                                        <Grid item md={4}>
-                                            dskjfalfj
-                                        </Grid>
-                                    </Grid>
-                              </Paper>
+                            <Paper className={classes.paper}>                                   
+                                <CalendarDay classes={classes}/>
+                            </Paper>
+                            </Slide>
+                        )}
+                        {this.state.currentView ==1 &&(
+                            <Slide direction="left" style={{ trgotoUpansitionDelay: false ? '500ms' : '0ms' }} in={true} mountOnEnter unmountOnExit>
+                                <Paper className={classes.paper}>     
+                                        <CalendarMonth classes={classes} />
+                                </Paper>
+                            </Slide>
+                           
+                        )} 
+                         {this.state.currentView ==2 &&(
+                            <Slide direction="left" style={{ trgotoUpansitionDelay: false ? '500ms' : '0ms' }} in={true} mountOnEnter unmountOnExit>
+                                <Paper className={classes.paper}>     
+                                        <CalendarYear classes={classes} />
+                                </Paper>
                             </Slide>
                         )}
 
+                        
                     </Grid>
                 </Grid>
             </Grid>
@@ -328,22 +299,39 @@ class CashFlowContent extends Component{
             <Grid container>
                 <Grid item xs={12}>
                     <Grid item xs={12} align="right">
-                        <Button variant="contained" size="medium" color="primary" className={classes.button}>
+                        <Button variant="contained" size="medium" color="primary" className={classes.button} onClick={e=>this.handleSwapView(0)}>
                             နေ့စဥ်
                         </Button> 
-                        <Button variant="contained" size="medium" color="primary" className={classes.button}>
+                        <Button variant="contained" size="medium" color="primary" className={classes.button} onClick={e=>this.handleSwapView(1)}>
                             လစဥ်
                         </Button> 
-                        <Button variant="contained" size="medium" color="primary" className={classes.button}>
+                        <Button variant="contained" size="medium" color="primary" className={classes.button} onClick={e=>this.handleSwapView(2)}>
                             နှစ်စဥ်
                         </Button> 
                     </Grid>
                     <Grid item xs={12}>
-                        <Slide direction="left" style={{ transitionDelay: false ? '500ms' : '0ms' }} in={true} mountOnEnter unmountOnExit>
-                            <Paper elevation={4} className={classes.paper}>
-
+                        {this.state.currentView ==0 &&(
+                            <Slide direction="left" style={{ trgotoUpansitionDelay: false ? '500ms' : '0ms' }} in={true} mountOnEnter unmountOnExit>
+                            <Paper className={classes.paper}>                                   
+                                <CalendarDay classes={classes} flag={true}/>
                             </Paper>
-                        </Slide>
+                            </Slide>
+                        )}
+                        {this.state.currentView ==1 &&(
+                            <Slide direction="left" style={{ trgotoUpansitionDelay: false ? '500ms' : '0ms' }} in={true} mountOnEnter unmountOnExit>
+                                <Paper className={classes.paper}>     
+                                        <CalendarMonth classes={classes} flag={true}/>
+                                </Paper>
+                            </Slide>
+                           
+                        )} 
+                         {this.state.currentView ==2 &&(
+                            <Slide direction="left" style={{ trgotoUpansitionDelay: false ? '500ms' : '0ms' }} in={true} mountOnEnter unmountOnExit>
+                                <Paper className={classes.paper}>     
+                                        <CalendarYear classes={classes} flag={true} />
+                                </Paper>
+                            </Slide>
+                        )}
                     </Grid>
                 </Grid>
             </Grid>   
@@ -371,5 +359,357 @@ class BalanceSheetContent extends Component{
     }
 }
 
+class CalendarMonth extends Component {
+    constructor(props){
+        super(props);
+        this.state={
+            currentMonth: new Date(),
+            selectedDate: new Date()
+        }        
+        this.renderCalendar=this.renderCalendar.bind(this);
+    }         
+    renderCalendar() {
+        const { classes,flag } = this.props;
+        const dateFormatHeader = "MMMM YYYY";
+        const dayFormat = "ddd";
+        const daysHeader = [];
+        let startDateHeader = dateFns.startOfWeek(this.state.currentMonth);
+        for (let i = 0; i < 7; i++) {
+            daysHeader.push(
+              <div className="col col-center" key={i}>
+                {dateFns.format(dateFns.addDays(startDateHeader, i), dayFormat)}
+              </div>
+            );
+        }
+
+        //Cells
+        const { currentMonth, selectedDate } = this.state;
+        const monthStart = dateFns.startOfMonth(currentMonth);
+        const monthEnd = dateFns.endOfMonth(monthStart);
+        const startDate = dateFns.startOfWeek(monthStart);
+        const endDate = dateFns.endOfWeek(monthEnd);
+        const dateFormat = "D";
+        const rows = [];
+        let days = [];
+        let day = startDate;
+        let formattedDate = "";
+        while (day <= endDate) {
+            for (let i = 0; i < 7; i++) {
+              formattedDate = dateFns.format(day, dateFormat);
+              const cloneDay = day;
+              days.push(
+                <div
+                  className={`col cell ${
+                    !dateFns.isSameMonth(day, monthStart)
+                      ? "disabled"
+                      : dateFns.isSameDay(day, selectedDate) ? "selected" : ""
+                  }`}
+                  key={day}
+                  onClick={() => this.onDateClick(dateFns.parse(cloneDay))}
+                >
+                  <div className="col col-center">{formattedDate}</div>
+                 
+                </div>
+              );
+              day = dateFns.addDays(day, 1);
+            }
+            rows.push(
+              <div className="row" key={day}>
+                {days}
+              </div>
+            );
+            days = [];
+        }
+
+        return (
+            <Grid container>
+                <Grid item md={4} align="center">
+                    <IconButton>
+                        <TopIcon fontSize="large" onClick={this.prevMonth}/>
+                    </IconButton> 
+                    <br />
+                    <Typography variant="title" >
+                        <span>
+                        {dateFns.format(this.state.currentMonth, dateFormatHeader)}
+                        </span>
+                    </Typography>
+                    <br />
+                    <Typography variant="title" >
+                        {
+                            !flag && (
+                                <spam>
+                                    စုစုပေါင်း၀င်ငွေ   
+                                </spam>
+                            )
+                        }
+                        {
+                            flag && (
+                                <spam>
+                                    စုစုပေါင်းထွက်ငွေ   
+                                </spam>
+                            )
+                        }
+                    </Typography>
+                    <br />
+                    <Typography variant="h3" 
+                    color={ !flag ? "primary":"secondary"}
+                    >
+                        ၂၀၁၃၄၂၀၀
+                    </Typography>
+                    <br />
+                    <Typography variant="subtitle" >
+                        ကျပ်
+                    </Typography>
+                    <IconButton>
+                        <DownIcon fontSize="large" onClick={this.nextMonth}/>
+                    </IconButton> 
+                </Grid>
+                <Grid item md={8}>
+                    <div className="days row">{daysHeader}</div>
+                    <div className="calendar">{rows}</div>
+                </Grid>
+            </Grid>
+        )
+
+    }
+    
+    onDateClick = day => {
+        this.setState({
+            selectedDate: day
+        });
+    }
+    nextMonth = () => {
+        this.setState({
+            currentMonth: dateFns.addMonths(this.state.currentMonth, 1)
+        });
+    }
+    prevMonth = () => {
+        this.setState({
+            currentMonth: dateFns.subMonths(this.state.currentMonth, 1)
+        });
+    }
+
+
+    render() {
+      return (
+        <div>
+            {this.renderCalendar()}                  
+        </div>
+      );
+    }
+}
+
+
+class CalendarDay extends Component {
+    constructor(props){
+        super(props);
+        this.state={
+            currentMonth: new Date(),
+            selectedDate: new Date(),
+            currentDate: new Date(),
+        }        
+        this.renderCalendar=this.renderCalendar.bind(this);
+    }         
+    renderCalendar() {
+        const { classes, flag } = this.props;
+        const dateFormatHeader = "D MMMM YYYY";
+        return (
+            <Grid container>
+                <Grid item md={4} align="center">
+                    <IconButton>
+                        <TopIcon fontSize="large" onClick={this.prevMonth}/>
+                    </IconButton> 
+                    <br />
+                    <Typography variant="title" >
+                        <span>
+                        {dateFns.format(this.state.currentDate, dateFormatHeader)}
+                        </span>
+                    </Typography>
+                    <br />
+                    <Typography variant="title" >
+                        {
+                            !flag && (
+                                <spam>
+                                    စုစုပေါင်း၀င်ငွေ   
+                                </spam>
+                            )
+                        }
+                        {
+                            flag && (
+                                <spam>
+                                    စုစုပေါင်းထွက်ငွေ   
+                                </spam>
+                            )
+                        }
+                       
+                    </Typography>
+                    <br />
+                    <Typography variant="h3" 
+                    color={ !flag ? "primary":"secondary"}
+                    >
+                        ၂၀၁၃၄၂၀၀
+                    </Typography>
+                    <br />
+                    <Typography variant="subtitle" >
+                        ကျပ်
+                    </Typography>
+                    <IconButton>
+                        <DownIcon fontSize="large" onClick={this.nextMonth}/>
+                    </IconButton> 
+                </Grid>
+                <Grid item md={8}>
+                    <Typography variant="title" align="center">
+                        စာရင်းမှတ်တမ်း
+                    </Typography>
+                    
+                    <GridList cellHeight={200} spacing={25} cols={1} className={classes.activityGridList}>
+                        <Timeline items={events} />
+                    </GridList>                                             
+                </Grid>
+            </Grid>
+        )
+
+    }
+    
+    onDateClick = day => {
+        this.setState({
+            selectedDate: day
+        });
+    }
+    nextMonth = () => {
+        this.setState({
+            currentDate: dateFns.addDays(this.state.currentDate, 1)
+        });
+    }
+    prevMonth = () => {
+        this.setState({
+            currentDate: dateFns.subDays(this.state.currentDate, 1)
+        });
+    }
+
+
+    render() {
+      return (
+        <div>
+            {this.renderCalendar()}                  
+        </div>
+      );
+    }
+}
+
+class CalendarYear extends Component {
+    constructor(props){
+        super(props);
+        this.state={
+            currentMonth: new Date(),
+            selectedDate: new Date(),
+            currentYear:new Date(),
+        }        
+        this.renderCalendar=this.renderCalendar.bind(this);
+    }         
+    renderCalendar() {
+        const { classes,flag } = this.props;
+        const dateFormatHeader = "YYYY";
+        return (
+            <Grid container>
+                <Grid item md={12} align="center">
+                    <Grid container>
+                        <Grid item md={4} align="left">
+                            <IconButton>
+                                <LeftIcon fontSize="large" onClick={this.prevYear}/>
+                            </IconButton>
+                        </Grid>
+                        <Grid item md={4} align="center">
+                            <Typography variant="h3" >
+                                <span>
+                                {dateFns.format(this.state.currentYear, dateFormatHeader)}
+                                </span>
+                            </Typography>   
+                        </Grid>
+                        <Grid item md={4} align="right">
+                            <IconButton>
+                                <RightIcon fontSize="large" onClick={this.nextYear}/>
+                            </IconButton>     
+                        </Grid>
+                    </Grid>         
+                    
+                </Grid>
+                <Grid item md={12} align="center">
+                    <div style={{paddingTop:'10%'}}>
+                    <Typography variant="title" >
+                        {
+                            !flag && (
+                                <spam>
+                                    စုစုပေါင်း၀င်ငွေ   
+                                </spam>
+                            )
+                        }
+                        {
+                            flag && (
+                                <spam>
+                                    စုစုပေါင်းထွက်ငွေ   
+                                </spam>
+                            )
+                        }
+                       
+                    </Typography>
+                    <br />
+                    <Typography variant="h3" 
+                    color={ !flag ? "primary":"secondary"}
+                    >
+                        ၂၀၁၃၄၂၀၀
+                    </Typography>
+                        <br />
+                        <Typography variant="title" >
+                            ကျပ်
+                        </Typography>
+                    </div>
+                </Grid>
+                <Grid item md={12} align="center">
+                    <div style={{paddingTop:'10%'}}>
+                    Month
+                    </div>
+                </Grid>
+              
+            </Grid>
+        )
+
+    }
+    
+    onDateClick = day => {
+        this.setState({
+            selectedDate: day
+        });
+    }
+    nextMonth = () => {
+        this.setState({
+            currentDate: dateFns.addDays(this.state.currentDate, 1)
+        });
+    }
+    prevMonth = () => {
+        this.setState({
+            currentDate: dateFns.subDays(this.state.currentDate, 1)
+        });
+    }
+
+    nextYear = () => {
+        this.setState({
+            currentYear: dateFns.addYears(this.state.currentYear, 1)
+        });
+    }
+    prevYear = () => {
+        this.setState({
+            currentYear: dateFns.subYears(this.state.currentYear, 1)
+        });
+    }
+
+    render() {
+      return (
+        <div>
+            {this.renderCalendar()}                  
+        </div>
+      );
+    }
+}
 
 export default connect(mapStateToProps, null)(withStyles(styles)(Financial))
