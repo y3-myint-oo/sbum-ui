@@ -19,10 +19,11 @@ const styles = theme => ({
 });
 
 class MMTextField extends Component{
+    
     constructor(props){
         super(props);
         this.state={
-            text:"",
+           text:"",
         }
         this.handleFont = this.handleFont.bind(this)
     } 
@@ -45,12 +46,12 @@ class MMTextField extends Component{
         this.setState({text: puretext});
     }
     render(){
+        const {classes, ...other} = this.props
         return(
-            <TextField
+            <TextField 
+                {...other}
                 onChange={this.handleFont}
                 type="text"
-                name="text"
-                placeholder=""
                 value={this.state.text}
             />
         )

@@ -13,7 +13,7 @@ import axios from 'axios';
 import { connect }  from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { changeAuthUser } from '../actions';
-import MMTextField from './utils/textfiled'
+import MMTextField from './utils/mmtext'
 
 const styles = theme => ({
     fab: {
@@ -36,6 +36,7 @@ class Login extends Component{
         this.handlePass=this.handlePass.bind(this);
     }
     handleSubmit(){ 
+        
         const params = {
             name: this.state.name,
             pass: this.state.pass,
@@ -56,6 +57,7 @@ class Login extends Component{
         this.setState({pass: event.target.value});
     }
     render(){
+        const {classes, ...other} = this.props
         return(
            
         <form  noValidate autoComplete="on">
@@ -64,12 +66,13 @@ class Login extends Component{
             
         <CardContent>
         <MMTextField
-          onChange={this.handleName}
           id="name"
+          onInput={this.handleName}
           label="Name"
           margin="normal"
           variant="outlined"
           value={this.state.name}
+          //inputRef={el => this.state.name = el}
         />
         <TextField
           onChange={this.handlePass}
