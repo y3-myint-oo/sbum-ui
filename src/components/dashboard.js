@@ -22,7 +22,6 @@ const styles = theme => ({
 
 class Dashboard extends Component{
     render(){
-        console.log( )
         const { classes , menuToggle } = this.props;
         if ( menuToggle){
             return(

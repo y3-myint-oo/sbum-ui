@@ -61,8 +61,8 @@ class Home extends Component{
                 }}
             >
                 <SideNav.Toggle  onClick={this.handClick}/>
-                <SideNav.Nav defaultSelected="dashboard">
-                    <NavItem eventKey="dashboard">
+                <SideNav.Nav defaultSelected="">
+                    <NavItem eventKey="">
                         <NavIcon>
                             <DashboardIcon />
                         </NavIcon>
@@ -130,7 +130,7 @@ class Home extends Component{
                 </SideNav.Nav>
             </SideNav>
             <main>
-                <Route path="/dashboard" exact component={props => <Dashboard />} />
+                <Route path="/" exact component={props => <Dashboard />} />
                 <Route path="/warehouse" component={props => <Warehouse />} />
                 <Route path="/setting" component={props => <Setting />} />
                 <Route path="/supply" component={props => <Supply />} />

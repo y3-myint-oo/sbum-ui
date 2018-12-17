@@ -11,11 +11,21 @@ import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import { changeMenuToggle } from './actions';
 
+import { persistStore, persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage' // defaults to localStora
 
-const store = createStore(rootReducer);
-console.log(" Store ", store.getState());
+
+const persistConfig = {
+    key: 'root',
+    storage,
+}
+const persistedReducer = persistReducer(persistConfig, rootReducer)
+
+const store = createStore(persistedReducer);
+const persistor = persistStore(store)
 store.subscribe( () => console.log('store',store.getState()))
 store.dispatch( changeMenuToggle(true))
+
 
 WebFont.load({
     google: {

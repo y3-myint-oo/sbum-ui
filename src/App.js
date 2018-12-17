@@ -4,19 +4,33 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import theme from './theme';
 import Welcome from './components/welcome';
 import Home from './components/home';
+import { connect }  from 'react-redux';
+
+
 
 class App extends Component {
   render() {
-    return (
+    const { classes , authUser } = this.props;
+    if (this.props.authUser !=null ){
+      return(
+        <MuiThemeProvider theme={theme}>
+          <Home />
+        </MuiThemeProvider>
+      )
+    }else{
+      return(
       <MuiThemeProvider theme={theme}>
-        {/*<Welcome />*/}
-        
-        <Home />
-       
-        
+         <Welcome />
       </MuiThemeProvider>
-    )
+      )
+    }
   }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+      authUser : state.AuthUser
+  };
+}
+
+export default connect(mapStateToProps)(App);

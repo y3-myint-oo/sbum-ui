@@ -8,6 +8,9 @@ import Grid from '@material-ui/core/Grid';
 import RegIcon from '@material-ui/icons/HowToReg';
 import PhoneIcon from '@material-ui/icons/LocalPhone'
 import { withStyles } from '@material-ui/core';
+import axios from 'axios';
+import Login from './login'
+
 
 const styles = theme => ({
     fab: {
@@ -17,7 +20,7 @@ const styles = theme => ({
      },
 });
 
-class Welcome extends Component{
+class Welcome extends Component{   
     render(){
         const { classes } = this.props;
         return(
@@ -49,41 +52,7 @@ class Welcome extends Component{
     }
 }
 
-class Login extends Component{
-    render(){
-        return(
-            <form noValidate autoComplete="off">
-        <Card>
-      
-        
-        <CardContent>
-        <TextField
-          id="name"
-          label="Name"
-          margin="normal"
-          variant="outlined"
-        />
-        <TextField
-          id="name"
-          label="Password"
-          margin="normal"
-          variant="outlined"
-        />
-            
-        </CardContent>
-     
-        <CardActions>
-            <Button size="small" color="primary" fullWidth>
-            Sing In
-            </Button>
-        </CardActions>
-    </Card>   
-    </form>
-           
-            
-        )
-    }
-}
+
 
 class Menu extends Component{
     render(){
@@ -112,5 +81,4 @@ class Menu extends Component{
         )
     }
 }
-
-export default withStyles(styles)(Welcome)
+export default withStyles(styles)(Welcome);
