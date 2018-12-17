@@ -21,12 +21,19 @@ const styles = theme => ({
 });
 
 class Dashboard extends Component{
+    constructor(props){
+        super(props);
+        this.state={
+
+        }        
+       
+    } 
     render(){
-        const { classes , menuToggle } = this.props;
+        const { classes , menuToggle,authUser } = this.props;
         if ( menuToggle){
             return(
                 <div className={classes.Offroot}>
-                                    Dashboard
+                    {authUser.name}
                 </div>
             )
         }else{
@@ -41,7 +48,8 @@ class Dashboard extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        menuToggle : state.MenuToggle
+        menuToggle : state.MenuToggle,
+        authUser : state.AuthUser
     };
 }
 
