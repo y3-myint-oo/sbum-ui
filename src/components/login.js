@@ -35,8 +35,7 @@ class Login extends Component{
         this.handleName=this.handleName.bind(this);
         this.handlePass=this.handlePass.bind(this);
     }
-    handleSubmit(){ 
-        
+    handleSubmit(){         
         const params = {
             name: this.state.name,
             pass: this.state.pass,
@@ -47,7 +46,8 @@ class Login extends Component{
             },
         },       
         ).then(res => {
-           this.props.changeAuthUser(res.data.authUser)
+            // console.log(" ------- ", res.data)
+            this.props.changeAuthUser(res.data.authUser)
         })    
     }
     handleName(event){

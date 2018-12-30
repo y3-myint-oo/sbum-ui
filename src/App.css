@@ -204,3 +204,12 @@ body:focus {
   background: #357a38 !important;
 }
 
+@media print {
+  header, footer, aside, form, … {
+      display: none;
+  }
+  * {
+    color: green;    
+    background-color: #fff;
+  }
+}

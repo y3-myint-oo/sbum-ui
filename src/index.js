@@ -20,7 +20,6 @@ const persistConfig = {
     storage,
 }
 const persistedReducer = persistReducer(persistConfig, rootReducer)
-
 const store = createStore(persistedReducer);
 const persistor = persistStore(store)
 store.subscribe( () => console.log('store',store.getState()))
