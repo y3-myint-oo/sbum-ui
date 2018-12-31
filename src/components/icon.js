@@ -167,7 +167,7 @@ class Icon extends Component{
                             <Typography variant="subtitle1" gutterBottom align="left">
                                 တောင်သူ အမည်
                             </Typography>
-                        </div>                          
+                        </div>                        
                        
                        
                         <FormControlLabel

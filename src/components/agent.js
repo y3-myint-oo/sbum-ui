@@ -385,10 +385,7 @@ class SupplyContent extends Component{
                         </Paper>
                     </Grid>
                     <Grid item xs={12} sm={12} md={8}>
-                    selectedItem
-                        <SupplyItemView data={this.state.selectedItem} classes={classes}/>
-                         
-                      
+                        <SupplyItemView data={this.state.selectedItem} classes={classes}/>                    
                     </Grid>
                 </Grid>  
 
