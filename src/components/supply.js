@@ -43,6 +43,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
+import { BeatLoader } from 'react-spinners';
+import axios from 'axios';
 
 const styles = theme => ({
    
@@ -193,6 +195,7 @@ const styles = theme => ({
     dialog: {
         position: 'absolute',
         width: theme.spacing.unit * 70,
+        height:'auto',
         backgroundColor: theme.palette.background.paper,
         boxShadow: theme.shadows[5],
         padding: theme.spacing.unit * 4,
@@ -204,23 +207,104 @@ const styles = theme => ({
         boxShadow: theme.shadows[5],
         padding: theme.spacing.unit * 4,
         alignContent: 'center',
+    },
+    sweetLoading:{
+        position: 'absolute', left: '50%', top: '50%',
+        transform: 'translate(-50%, -50%)'
+    },
+    btm:{
+        paddingTop:theme.spacing.unit*3,
+    },
+    textF:{
+        paddingTop:theme.spacing.unit*2,
     }
 });
 
 class Supply extends Component{
+    constructor(props){
+        super(props);
+        this.state={
+            supplies:null,
+            units:null,
+            isLoading:true,
+        }        
+        this.fetchSuppliesAndUnits=this.fetchSuppliesAndUnits.bind(this)   
+    } 
+    componentDidMount() {
+        this.fetchSuppliesAndUnits();
+    }
+    fetchSuppliesAndUnits(){
+        axios.all([
+            axios.get('http://localhost:8081/api/v1/supply',{
+                headers: {
+                    'content-type': 'application/json',
+                },
+            }),
+            axios.get('http://localhost:8081/api/v1/unit',{
+                headers: {
+                    'content-type': 'application/json',
+                },
+            })
+        ]).then(axios.spread((suppRes, unitRes) => {
+            this.setState({supplies:suppRes.data.data})
+            this.setState({units:unitRes.data.data})
+            console.log( " fetch Supplies ---- ", this.state.supplies)
+            console.log( " fetch Units ---- ", this.state.units)
+            this.setState({isLoading:false})
+        }));
+    }
+
+    handleBack(){
+        if ( this.state.selectedIndex == 0 ){
+            this.setState({selectedIndex:this.state.units.length-1})
+        }else{
+            this.setState({selectedIndex:this.state.selectedIndex-1})
+        }
+    }
+    handleForward(){
+        if ( this.state.selectedIndex == this.state.units.length-1 ){
+            this.setState({selectedIndex:0})
+        }else{
+            this.setState({selectedIndex:this.state.selectedIndex+1})
+        }
+    } 
+   
     render(){
-        console.log( )
         const { classes , menuToggle } = this.props;
+        const { isLoading } = this.state;  
         if (menuToggle){
             return(
-                <div className={classes.Offroot}>
-                    <SupplyContent classes={classes} />
+                <div className={classes.Offroot}>                   
+                    {!this.state.isLoading ? (
+                         <SupplyContent classes={classes} supplies={this.state.supplies} units={this.state.units}/>
+                    ):(
+                        <div className={classes.sweetLoading}>
+                                <BeatLoader
+                                sizeUnit={"px"}
+                                size={20}
+                                color={'#357a38'}
+                                loading={this.state.isLoading}
+                                />
+                        </div> 
+                    )}                  
                 </div>
             )
         }else{
             return(
                 <div className={classes.Onroot}>
-                    <SupplyContent classes={classes} />
+                    {!this.state.isLoading ? (
+                         <SupplyContent classes={classes} supplies={this.state.supplies} units={this.state.units}/>
+                    ):(
+                        <div className={classes.sweetLoading}>
+                                <BeatLoader
+                               // className={override}
+                                sizeUnit={"px"}
+                                size={20}
+                                color={'#357a38'}
+                                loading={this.state.isLoading}
+                                />
+                        </div> 
+                    )}
                 </div>
             )
         }
@@ -233,7 +317,7 @@ const mapStateToProps = (state) => {
     };
 }
 
-const SupplyItems = [
+/*8const SupplyItems = [
     {id:"1",code:"co001",name:"ဦးမြ",description:"ရွှေဘို တောင်သူ",phone:"092053182",addr:"အမှတ် (၂) အိပ်အမှတ် ၇ , မင်းတုန်းလမ်း",township:"ရွှေဘို",division:"မန္တလေးမြို့"},
     {id:"2",code:"b002",name:"ဦးဘ",description:"",phone:"09205212",addr:"",township:"ရွှေဘို",division:"မန္တလေးမြို့"},
     {id:"3",code:"co002",name:"ဦးချစ်မောင်",description:"",phone:"09952141233",addr:"ပုဇွန်တောင်အထက်လမ်း တိုက် (၂) ၄ လွှာ",township:"ပုဇွန်တောင်",division:"ရန်ကုန်"},
@@ -242,24 +326,32 @@ const SupplyItems = [
     {id:"2",code:"co453",name:"ဦးလှမောင်",description:"",phone:"092053182",addr:"ပုဇွန်တောင်အထက်လမ်း",township:"",division:""},
     {id:"3",code:"co212",name:"ခင်နု",description:"",phone:"092053182",addr:"",township:"",division:""},
     {id:"4",code:"co138",name:"မမြကြည်",description:"",phone:"09259116768",addr:"",township:"",division:""},
-]
-const units=[
-    {name:"တင်းရေ"},
-    {name:"အိတ်"},
-    {name:"ပြည်"},
-    {name:"ပိသာ"},
-]
+]*/
+
 const divisions=[
-    {name:"မန္တလေးမြို့"},
-    {name:"ရန်ကုန်မြို့"},
-    {},
+    {name:"မန္တလေးတိုင်းဒေသကြီး"},
+    {name:"ရန်ကုန်တိုင်းဒေသကြီး"},
+    {name:"မကွေးတိုင်းဒေသကြီး"},
+    {name:"နေပြည်တော်တိုင်းဒေသကြီး"},
+    {name:"ပဲခူးတိုင်းဒေသကြီး"},
+    {name:"ရှမ်းပြည်နယ်"},
+    {name:"စကိုင်းတိုင်းဒေသကြီး"},
+    {name:"ဧရာ၀တီတိုင်းဒေသကြီး"},
+    {name:"မွန်ပြည်နယ်"},
+    {name:"ကချင်ပြည်နယ်"},
+    {name:"တနလ်ာရီတိုင်းဒေသကြီး"},
+    {name:"ချင်းပြည်နယ်"},
+    {name:"ရခိုင်ပြည်နယ်"},
+    {name:"ကရင်ပြည်နယ်"},
 ]
 
 class SupplyContent extends Component{
     constructor(props){
         super(props);
         this.state={
-            selectedItem:SupplyItems[0],  
+            supplies:this.props.supplies,
+            units:this.props.units,
+            selectedItem:null,  
             selectedView:0, 
             dialogOpen:false,
             snackOpen:false,
@@ -267,6 +359,8 @@ class SupplyContent extends Component{
         this.handleSelectedItem=this.handleSelectedItem.bind(this)
         this.handleDialog=this.handleDialog.bind(this)
         this.handleSnack=this.handleSnack.bind(this)
+        this.refresh=this.refresh.bind(this)
+        this.handleChildSnack=this.handleChildSnack.bind(this)
     } 
     handleSelectedItem(data){
         console.log(data)
@@ -278,8 +372,15 @@ class SupplyContent extends Component{
     handleSnack(){
         this.setState({snackOpen:!this.state.snackOpen})
     }
+    refresh(){
+        window.location.reload()
+    }
+    handleChildSnack(c,msg){
+        this.setState({snackOpen:c,snackMessage:msg})
+    }
     render(){
         const { classes } = this.props;
+        const { isLoading,units, error } = this.state;   
         return(
             <div className={classes.root}>
             <CircleMenu />
@@ -303,74 +404,83 @@ class SupplyContent extends Component{
                 </div>    
                 </Toolbar>
             </AppBar>
-            <div className={classes.content}>
-                <Grid container spacing={24}>
-                    <Grid item xs={12} sm={12} md={4}>
-                        <div>
-                            <Grid container>
-                                <Grid item  sm={12}>
-                                        
-                                </Grid>
-                            </Grid>  
-                        </div>    
-                        
-                        <div className={classes.menuButton}>
-                        <Button variant="extendedFab" aria-label="addNewItem" fullWidth className={classes.addButton}
-                        onClick={this.handleDialog}
-                        >             
-                            <AddIcon />
-                            တောင်သူ အသစ်ထည့်မည်
-                        </Button>   
-                        </div>
-                        <Paper className={classes.paper} style={{marginTop:-20}}>
-                            <GridList cellHeight={200} spacing={25} cols={1} className={classes.gridList}>
-                                {SupplyItems.map(item => (
-                                   <SupplyItemUI item={item} classes={classes} handleItem={this.handleSelectedItem}/>
-                                ))}
-                            </GridList>    
-                        </Paper>
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={8}>
-                        
-                        <SupplyItemView data={this.state.selectedItem} classes={classes}/>
-                         
-                      
-                    </Grid>
-                </Grid>  
-
-                <Modal
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description"
-                    open={this.state.dialogOpen}
-                    onClose={this.handleDialog}
-                    >
-                    <div style={getModalStyle()} className={classes.dialog}>
-                        <NewItemDialog  classes={classes} close={this.handleDialog} snackMsg={this.handleSnack}/> 
-                    </div>
-                </Modal>   
-                <Snackbar
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'left',
-                    }}
-                    open={this.state.snackOpen}
-                    onClose={this.handleSnack}
-                    ContentProps={{
-                        'aria-describedby': 'message-id',
-                    }}
-                    message={
-                    <span id="message-id">I love snacks</span>
-                    }
-                    action={[
-                        <IconButton
-                           color="inherit"
-                          onClick={this.handleSnack}
+                <div className={classes.content}>
+                    <Grid container spacing={24}>
+                        <Grid item xs={12} sm={12} md={4}>
+                            <div>
+                                <Grid container>
+                                    <Grid item  sm={12}>
+                                            
+                                    </Grid>
+                                </Grid>  
+                            </div>    
+                            
+                            <div className={classes.menuButton}>
+                            <Button variant="extendedFab" aria-label="addNewItem" fullWidth className={classes.addButton}
+                            onClick={this.handleDialog}
+                            >             
+                                <AddIcon />
+                                တောင်သူ အသစ်ထည့်မည်
+                            </Button>   
+                            </div>
+                            <Paper className={classes.paper} style={{marginTop:-20}}>
+                                <GridList cellHeight={200} spacing={25} cols={1} className={classes.gridList}>
+                                    {
+                                        this.state.supplies !=null && (
+                                            <div>
+                                                {this.state.supplies.map(item => (
+                                                    <SupplyItemUI item={item} classes={classes} handleItem={this.handleSelectedItem}
+                                                    handleParentSnack={this.handleChildSnack}
+                                                   // snackMessage={this.state.snackMessage}                                                    
+                                                    />
+                                                ))}
+                                            </div>
+                                        )
+                                    }
+                                    
+                                </GridList>    
+                            </Paper>
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={8}>
+                            {
+                                this.state.selectedItem !=null &&(
+                                    <SupplyItemView data={this.state.selectedItem} classes={classes}/>
+                                )
+                            }   
+                          
+                        </Grid>
+                    </Grid>  
+    
+                    <Modal
+                        open={this.state.dialogOpen}
+                        onClose={this.handleDialog}
                         >
-                          <CloseIcon />
-                        </IconButton>,
-                      ]}
-                />   
-            </div>    
+                        <div style={getModalStyle()} className={classes.dialog}>
+                            <NewItemDialog  classes={classes} close={this.handleDialog} snackMsg={this.handleSnack} units={units}/> 
+                        </div>
+                    </Modal>   
+                    <Snackbar                    
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                        }}
+                        open={this.state.snackOpen}
+                        onClose={this.handleSnack}
+                        ContentProps={{
+                            'aria-describedby': 'message-id',
+                        }}
+                        message={
+                            <span id="message-id"                        
+                            >{this.state.snackMessage}</span>
+                        }
+                        action={[
+                            <Button key="undo" color="secondary" size="small" onClick={this.refresh}>
+                            REFRESH
+                            </Button>              
+                        ]}
+                    />       
+                </div>       
+        
         </div>   
         )
     }
@@ -391,27 +501,52 @@ class NewItemDialog extends Component{
     constructor(props){
         super(props);
         this.state={
-            unit:units[0],
-            sellPrice:0,
+            units:this.props.units,
+            name:"",
+            phone:"",
+            division:"",
+            address:"",
+            note:"",
+            snackOpen:false,
+            snackMessage:"",
+            snackCode:0,
+
         }
         this.handleClose = this.handleClose.bind(this);
-        this.handleSave = this.handleSave.bind(this);
-        this.handleSnackMessage= this.handleSnackMessage.bind(this);
+        this.handleChange=this.handleChange.bind(this)
+        this.handleSnack=this.handleSnack.bind(this)
+        this.refresh=this.refresh.bind(this)
+        this.handleConfirm=this.handleConfirm.bind(this)
     } 
+    refresh() {
+        window.location.reload();
+    }
+    handleSnack(){
+        this.setState({snackOpen:!this.state.snackOpen})
+    }
     handleClose(){
-        console.log("Close")
         this.props.close()
     }
-    handleSave(){
-        console.log("Save")
-        this.props.close()
+    handleChange(event) {
+        this.setState({ [event.target.name]: event.target.value });
     }
-    handleChangeUnit(){
-        console.log("Unit Change")
-    }
-    handleSnackMessage(){
-        this.props.close()
-        this.props.snackMsg()
+    handleConfirm(){
+        //Fetch API
+        const params = {
+            name:this.state.name,
+            address:this.state.address,
+            phone:this.state.phone,
+            division:this.state.division,
+            note:this.state.note,
+        };
+        axios.post('http://localhost:8081/api/v1/add/supply',params,{
+            headers: {
+                'content-type': 'application/json',
+            },
+        }).then(res => {
+            this.setState({snackMessage:res.data.message})
+            this.setState({snackOpen:!this.state.snackOpen})
+        }) 
     }
     render(){
         const { classes } = this.props;
@@ -420,7 +555,7 @@ class NewItemDialog extends Component{
                 <AppBar position='fixed'>
                         <Toolbar>                       
                         <Typography variant="h6" color="inherit" className={classes.flex}>
-                            ကုန်ပစ္စည်း အမျိုးအစာ အသစ်ထည့်မည်
+                            တောင်သူ အသစ်ထည့်မည်
                         </Typography>
                         <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
                             <CloseIcon />
@@ -428,89 +563,108 @@ class NewItemDialog extends Component{
                         </Toolbar>
                 </AppBar>
                 <div style={{paddingTop:50}} >
-                <Grid container spacing={24}>
+                <Grid container spacing={8}>
                     <Grid item xs={12} >
-                                <Typography variant="caption" gutterBottom align="left">
-                                    ကုန်ပစ္စည်းအမှတ်အသားဃူနစ်
+                                <Typography variant="caption"  align="left">
+                                    အမည်
                                 </Typography> 
-                                <spam className={classes.spacing} /> 
-                                <Input
-                                    defaultValue=""
-                                    inputProps={{
-                                    'aria-label': 'Description',
-                                    }}
-                                />
-                                
-                                    <IconButton aria-label="Auto">
-                                        <AutoIcon />
-                                    </IconButton>
-                               
-                                
-                    </Grid>
-                    <Grid item xs={6} >
                                 <TextField
+                                name="name"
                                 required
-                                id="standard-required"
-                                label="ကုန်ပစ္စည်းအမည်"
-                                defaultValue=" "
-                                className={classes.textField}
+                                value={this.state.name}
                                 margin="normal"
+                                onChange={this.handleChange}
+                                />                               
+                    </Grid>
+                    <Grid item xs={6} >
+                                <Typography variant="caption"  align="left">
+                                    ဖုန်းနံပါတ်
+                                </Typography>
+                                <TextField
+                                name="phone"
+                                value={this.state.phone}
+                                margin="normal"
+                                onChange={this.handleChange}
                                 />
                     </Grid>
                     <Grid item xs={6} >
+                                <Typography variant="caption"  align="left">
+                                တိုင်းဒေသကြီး
+                                </Typography>
                                 <TextField
                                 fullWidth
-                                id="standard-select-currency"
+                                name="division"
                                 select
-                                label="ကုန်ပစ္စည်းအတိုင်းအတာယူနစ်"
-                                value={this.state.unit}
-                                onChange={this.handleChangeUnit()}
+                                value={this.state.division}
+                                onChange={this.handleChange}
                                 margin="normal"
                                 >
-                                {units.map(option => (
-                                    <MenuItem key={option.name} value={option.name}>
-                                    {option.name}
+                                {divisions.map(i => (
+                                    <MenuItem key={i.name} value={i.name}>
+                                    {i.name}
                                     </MenuItem>
                                 ))}
                                 </TextField>
                     </Grid>
-                    <Grid item xs={6} >
-                                <Typography variant="caption" gutterBottom align="left">
-                                    လက်ရှိရောင်းစျေး
-                                </Typography> 
-                                <spam className={classes.spacing} /> 
+                    <Grid item xs={12} >
+                                <Typography variant="caption"  align="left">
+                                    နေရပ်လိပ်စာ
+                                </Typography>                                
                                 <Input
-                                    defaultValue=""
-                                    inputProps={{
-                                    'aria-label': 'Description',
-                                    }}
+                                    className={classes.textF}
+                                    name="address"
+                                    value={this.state.address}
+                                    margin="normal"
+                                    fullWidth
+                                    required
+                                    onChange={this.handleChange}
                                 /> 
                     </Grid>
-                    <Grid item xs={6} >
-                                <Typography variant="caption" gutterBottom align="left">
-                                    ၀ယ်စျေး
+                    <Grid item xs={12} >
+                                <Typography variant="caption"  align="left">
+                                    မှတ်ချက်
                                 </Typography> 
-                                <spam className={classes.spacing} /> 
                                 <Input
-                                    defaultValue=""
-                                    inputProps={{
-                                    'aria-label': 'Description',
-                                    }}
-                                />
+                                    name="note"
+                                    className={classes.textF}
+                                    value={this.state.note}
+                                    margin="normal"
+                                    fullWidth
+                                    onChange={this.handleChange}
+                                /> 
                     </Grid>
-                    <Grid item xs={6} >
-                        <Button  variant="outlined" color="primary" onClick={this.handleSnackMessage}>
-                            သိမ်းမည်
-                        </Button>   
-                        <spam className={classes.bpacing}/>
-                        <Button  variant="outlined" color="secondary" onClick={this.handleSnackMessage}>
-                            ပယ်ဖျက်မည်
-                        </Button>
-                    </Grid>
-
-
-                     
+                    <Grid item xs={12} >
+                        <div className={classes.btm}>                          
+                            <Button  variant="outlined" color="secondary" onClick={this.handleClose}>
+                                ပယ်ဖျက်မည်
+                            </Button>
+                            <spam className={classes.bpacing}/>
+                            <Button  variant="outlined" color="primary" onClick={this.handleConfirm}>
+                                သိမ်းမည်
+                            </Button> 
+                        </div>
+                    </Grid>                    
                 </Grid>
+                <Snackbar                    
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                    }}
+                    open={this.state.snackOpen}
+                    onClose={this.handleSnack}
+                    ContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={
+                        <span id="message-id"                        
+                        >{this.state.snackMessage}</span>
+                    }
+                    action={[
+                        <Button key="undo" color="secondary" size="small" onClick={this.refresh}>
+                        CLOSE
+                        </Button>              
+                      ]}
+                />
                 </div>
             </div>
         )
@@ -525,11 +679,38 @@ class SupplyItemUI extends Component{
             dialogPhoneBook:false,
             value: '',
             copied: false,
+            item:this.props.item
+
         }
         this.handlePhoneBook=this.handlePhoneBook.bind(this)
+        this.handleDeleteSupply=this.handleDeleteSupply.bind(this)
+        this.handleSnackOpen=this.handleSnackOpen.bind(this)
     } 
+    handleSnackOpen(vale,msg){
+        this.props.handleParentSnack(vale,msg);
+    }
     handlePhoneBook(){
         this.setState({dialogPhoneBook:!this.state.dialogPhoneBook})
+    }
+    handleDeleteSupply(){
+        //Fetch API
+        const v =this.state.item;
+        const params = {
+            id:v.id,
+            name:v.name,
+            address:v.address,
+            phone:v.phone,
+            division:v.division,
+            note:v.note,
+        };
+        axios.post('http://localhost:8081/api/v1/delete/supply',params,{
+            headers: {
+                'content-type': 'application/json',
+            },
+        }).then(res => {
+           // this.setState({snackMessage:res.data.message})
+            this.handleSnackOpen(true,res.data.message)
+        })
     }
     render(){
         const { classes,item,handleItem } = this.props;
@@ -544,7 +725,7 @@ class SupplyItemUI extends Component{
                             </Typography>
                         </CardContent>
                         <div className={classes.settingButton}>
-                            <IconButton variant="fab" aria-label="Delete">
+                            <IconButton variant="fab" aria-label="Delete" onClick={this.handleDeleteSupply}>
                                 <DeleteIcon className={classes.settingIcon}/>
                             </IconButton>
                             <IconButton variant="fab" aria-label="Phone" onClick={this.handlePhoneBook}>
@@ -642,17 +823,19 @@ class SupplyItemView extends Component{
         super(props);
         this.state={
             selectedView:0,  //buy price history, sell price history , with year filter
+            data:this.props.data
         }        
         this.handleChange=this.handleChange.bind(this)
- 
+       // this.handleDeleteSupply=this.handleDeleteSupply.bind(this)
     } 
     handleChange(view){
         this.setState({selectedView:view})
     }
    
+   
     render(){
-        const { classes,data } = this.props;
-        const { selectedView } = this.state;
+        const { classes } = this.props;
+        const { selectedView,data } = this.state;
         return (
             <div className={classes.view}>
                 <Grid container >

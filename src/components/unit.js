@@ -355,7 +355,6 @@ class UnitContent extends Component{
                                     </Card>    
                                 </Grid>
                                 <Grid item md={12}>
-
                                     <Grid container>
                                         <Grid item md={12} >
                                             <TextField
