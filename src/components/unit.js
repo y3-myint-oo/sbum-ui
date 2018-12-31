@@ -8,6 +8,7 @@ import InputBase from '@material-ui/core/InputBase';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import SearchIcon from '@material-ui/icons/Search';
 import CircleMenu from './icon';
+import MenuItem from '@material-ui/core/MenuItem';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import GridList from '@material-ui/core/GridList';
@@ -29,6 +30,8 @@ import { BeatLoader } from 'react-spinners';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import Select from '@material-ui/core/Select';
+
 
 const styles = theme => ({
     root: {
@@ -160,6 +163,9 @@ class UnitContent extends Component{
             units:this.props.units,
             nunit:"",
             dunit:null, // Delete Unit Selection
+            mappedUnit:"",
+            mappedCross:0,
+            addBoxShow:false,
             deleteBoxShow:false,
             snackOpen:false,
             snackMessage:"",
@@ -170,9 +176,14 @@ class UnitContent extends Component{
         this.addNewUnit=this.addNewUnit.bind(this)
         this.handleNewUnit=this.handleNewUnit.bind(this)
         this.handleDeleteBox=this.handleDeleteBox.bind(this) // DeleteBox is for Converter Unit Only
+        this.handleDeleteBoxConfrim=this.handleDeleteBoxConfrim.bind(this)
         this.handleSnack=this.handleSnack.bind(this)
         this.deleteUnit=this.deleteUnit.bind(this)
         this.refresh=this.refresh.bind(this)
+        this.handleAddBox=this.handleAddBox.bind(this)
+        this.handleSelectChange=this.handleSelectChange.bind(this)
+        this.handleCorssChange=this.handleCorssChange.bind(this)
+        this.addNewBox=this.addNewBox.bind(this)
     } 
     handleBack(){
         if ( this.state.selectedIndex == 0 ){
@@ -189,9 +200,31 @@ class UnitContent extends Component{
         }
     } 
 
-    handleDeleteBox(value){
-        this.setState({dunit:value})
+    handleDeleteBox(value){   
+        this.setState({dunit:value})    
         this.setState({deleteBoxShow:!this.state.deleteBoxShow})
+    }
+    handleDeleteBoxConfrim(){
+       //Fetch API
+        const params = {
+            name:this.state.dunit.name,
+            //mid - automatic fill from server-side
+            cross:"",
+            map:this.state.units[this.state.selectedIndex].name,
+        };
+        axios.post('http://localhost:8081/api/v1/unit/delete/converter',params,{
+            headers: {
+                'content-type': 'application/json',
+            },
+        }).then(res => {
+            this.setState({snackMessage:res.data.message})
+            this.setState({snackOpen:!this.state.snackOpen})
+        }) 
+       this.setState({deleteBoxShow:!this.state.deleteBoxShow})
+    }
+
+    handleAddBox(){
+        this.setState({addBoxShow:!this.state.addBoxShow})
     }
     handleNewUnit(event){
         // New Unit Name - nunit
@@ -226,8 +259,7 @@ class UnitContent extends Component{
                 'content-type': 'application/json',
             },
         }).then(res => {
-          //  console.log(" Delete Old Unit ", res.data)
-            //this.refresh()
+            console.log(" Delete Old Unit ", res.data)
             this.setState({snackMessage:res.data.message})
             this.setState({snackOpen:!this.state.snackOpen})
         }) 
@@ -239,13 +271,41 @@ class UnitContent extends Component{
     handleSnack(){
         this.setState({snackOpen:!this.state.snackOpen})
     }
+   
+    handleSelectChange(event){
+        this.setState({mappedUnit:event.target.value})
+    }
+    handleCorssChange(event){
+        if (event.target.value > 0){
+            this.setState({mappedCross:event.target.value})
+        }
+    }
+    addNewBox(){
+        // fetch API
+        const params = {
+            name:this.state.mappedUnit,
+            //mid - automatic fill from server-side
+            cross:this.state.mappedCross,
+            map:this.state.units[this.state.selectedIndex].name,
+        };
+        axios.post('http://localhost:8081/api/v1/unit/add/converter',params,{
+            headers: {
+                'content-type': 'application/json',
+            },
+        }).then(res => {
+            this.setState({snackMessage:res.data.message})
+            this.setState({snackOpen:!this.state.snackOpen})
+        }) 
+        this.setState({addBoxShow:!this.state.addBoxShow})
+    }
 
-    render(){
+    render(){        
         const {units} =this.state;
         const selectedUnit = units[this.state.selectedIndex];
         const { classes } = this.props;
         return(
             <div className={classes.root}>
+               
                 <CircleMenu />
                 <AppBar position="sticky" color="default">
                     <Toolbar className={classes.toolBar}>
@@ -254,7 +314,7 @@ class UnitContent extends Component{
                     </Typography>
                     <div className={classes.grow} />
                     <div className={classes.ads}>
-                       
+                        {selectedUnit.converters.length}kj;jklj
                     </div>    
                     </Toolbar>
                 </AppBar>
@@ -330,12 +390,12 @@ class UnitContent extends Component{
                             <GridList className={classes.gridList} cellHeight="130" spacing={8} cols={4}>
                                     <div>
                                     <Card className={classes.card2}>
-                                    <CardActionArea>
+                                    <CardActionArea onClick={this.handleAddBox}>
                                         <CardContent>
                                             <Typography variant="h6" align="center">
                                                     ပြောင်းလဲနှုန်း
                                             </Typography>
-                                            <Typography color="primary" variant="h4" align="center">
+                                            <Typography color="primary" variant="h2" align="center">
                                                 +
                                             </Typography>
                                         </CardContent> 
@@ -343,8 +403,8 @@ class UnitContent extends Component{
                                     </Card>  
                                     </div>                              
                                 {                                  
-                                  selectedUnit.converter!=null && (
-                                    selectedUnit.converter.map((item,i) => (
+                                  selectedUnit.converters!=null && (
+                                    selectedUnit.converters.map((item,i) => (
                                         <div key={i}>
                                            <Card className={classes.card2}>
                                            <CardActionArea onClick={e=>this.handleDeleteBox(item)}>
@@ -389,13 +449,73 @@ class UnitContent extends Component{
                     <Button onClick={this.handleDeleteBox} color="secondary">
                     ပယ်မဖျက်ပါ
                     </Button>
-                    <Button onClick={this.handleDeleteBox} color="primary">
+                    <Button onClick={this.handleDeleteBoxConfrim} color="primary">
                     ပယ်ဖျက်မည်
                     </Button>
                 </DialogActions>
                 </Dialog>
-                <Snackbar
-                    
+                <Dialog
+                open={this.state.addBoxShow}
+                onClose={this.handleAddBox}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                >
+                <DialogTitle id="alert-dialog-title">{"ပြောင်းလဲနှုန်းထားအသစ် ထည့်လိုပါသလား"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                    <Grid container spacing={8}>
+                        <Grid item md={12}>
+                            <Select
+                                
+                                value={this.state.mappedUnit}
+                                onChange={this.handleSelectChange}
+                                inputProps={{
+                                    name: 'age',
+                                    padding:'2%',
+                                }}
+                                fullWidth
+                            >    
+                            <MenuItem value="">
+                                <em>None</em>
+                            </MenuItem>  
+                            {
+                                this.state.units.map((item,i) => (
+                                    <MenuItem value={item.name}>{item.name}</MenuItem>
+                                ))
+                            }
+                            </Select>
+                        </Grid>
+                        <Grid item md={12}>
+                        <TextField
+                            //id="standard-number"
+                            label="အချိန်အဆ"
+                            value={this.state.mappedCross}
+                            onChange={this.handleCorssChange}
+                            type="number"
+                           // className={classes.textField}
+                            InputLabelProps={{
+                                shrink: true,
+                                padding:'2%',
+                            }}
+                            margin="normal"
+                            fullWidth
+                        />
+                        </Grid>
+                    </Grid>
+                          
+                </DialogContentText>
+                </DialogContent>
+                <DialogActions>                   
+                    <Button onClick={this.handleAddBox} color="secondary">
+                    မထည့်ပါ
+                    </Button>
+                    <Button onClick={this.addNewBox} color="primary">
+                    ထည့်မည်
+                    </Button>
+                </DialogActions>
+                </Dialog>        
+
+                <Snackbar                    
                     anchorOrigin={{
                         vertical: 'bottom',
                         horizontal: 'left',
